@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"particle_movePixel",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"particle_movePixel",
+  "parent":{
+    "name":"Particle",
+    "path":"folders/Scripts/Particle.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

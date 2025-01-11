@@ -1,0 +1,21 @@
+{
+  "FolderOrderSettings":[
+    {"name":"Extensions","order":14,"path":"folders/Extensions.yy",},
+    {"name":"Fonts","order":7,"path":"folders/Fonts.yy",},
+    {"name":"Notes","order":13,"path":"folders/Notes.yy",},
+    {"name":"Objects","order":9,"path":"folders/Objects.yy",},
+    {"name":"Particle","order":3,"path":"folders/Objects/Particle.yy",},
+    {"name":"Rooms","order":10,"path":"folders/Rooms.yy",},
+    {"name":"Scripts","order":5,"path":"folders/Scripts.yy",},
+    {"name":"Particle","order":1,"path":"folders/Scripts/Particle.yy",},
+    {"name":"Shaders","order":6,"path":"folders/Shaders.yy",},
+    {"name":"Sounds","order":3,"path":"folders/Sounds.yy",},
+    {"name":"Sprites","order":1,"path":"folders/Sprites.yy",},
+    {"name":"Particles","order":1,"path":"folders/Sprites/Particles.yy",},
+  ],
+  "ResourceOrderSettings":[
+    {"name":"Camera","order":2,"path":"objects/Camera/Camera.yy",},
+    {"name":"Spaceship","order":1,"path":"objects/Spaceship/Spaceship.yy",},
+    {"name":"sStars_particle","order":1,"path":"sprites/sStars_particle/sStars_particle.yy",},
+  ],
+}
