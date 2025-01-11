@@ -31,7 +31,7 @@ if (keyboard_check(ord("W"))) {
 		var xx = (x) - lengthdir_x(offset, direction) + irandom_range(-range, range);
 		var yy = (y) - lengthdir_y(offset, direction) + irandom_range(-range, range);
 		
-		with (instance_create_depth(round(xx), round(yy), depth, Particle)) {
+		with (instance_create_layer(round(xx), round(yy), "Glowing_Particles", Particle)) {
 			self.sprite_index = sPixel_particle;
 			
 			var ton = irandom_range(5, 10);
@@ -45,7 +45,7 @@ if (keyboard_check(ord("W"))) {
 				self.spd += 1;
 			};
 			
-			self.color = [choose(c_orange, c_orange, c_red), black, 0.01];
+			self.color = [choose(c_orange, c_orange, c_red), black, 0.08];
 			self.destroyTime = (irandom(2) + 1) * 30;
 			self.scale = 1;
 		}
@@ -59,3 +59,8 @@ if (keyboard_check(ord("W"))) {
 angle += turn;
 
 direction = angle;
+
+
+
+create_stars();
+

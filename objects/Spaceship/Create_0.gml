@@ -16,3 +16,4 @@ fuel = 1;
 with (instance_create_depth(x, y, depth, Camera)) {
 	self.target = other;
 }
+

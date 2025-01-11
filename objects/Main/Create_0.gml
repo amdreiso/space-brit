@@ -21,7 +21,7 @@ globalvar GameSpeed; GameSpeed = 1;
 globalvar Paused; Paused = false;
 globalvar Debug; Debug = false;
 globalvar Seed; Seed = 1000000;
-
+globalvar StarGrid; StarGrid = ds_map_create();
 
 // For testing
 Debug = true;
