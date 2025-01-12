@@ -10,4 +10,5 @@ destroyTime = 0;
 
 move = function(val){}
 
+depthFactor = 1;
 scale = 1;

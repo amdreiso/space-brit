@@ -1,8 +1,20 @@
-function fovy(){}
+
+
+enum BUTTON_ORIGIN {
+	Left, 
+	MiddleCenter,
+}
+
+
+function fovy(){
+	show_debug_message("Loaded FOVY!");
+}
 
 function vec2(x=0, y=0) constructor {self.x=x; self.y=y}
 
 function dim(width=0, height=0) constructor {self.width=width; self.height=height}
+
+function rgb(r, g, b) constructor { self.r = r; self.g = g; self.b = b; }
 
 function button(
 	x, y, width, height, 
@@ -12,7 +24,7 @@ function button(
 	var range;
 	
 	switch (orientation) {
-		case 0:				// top left
+		case BUTTON_ORIGIN.Left:
 			
 			range = (mouse_x > x && mouse_x < x + width && mouse_y > y && mouse_y < y + height);
 			
@@ -39,7 +51,7 @@ function button(
 			
 			break;
 		
-		case 1:				// middle center
+		case BUTTON_ORIGIN.MiddleCenter:
 			
 			range = (
 				mouse_x > x - width / 2 && 
@@ -123,7 +135,7 @@ function get_perlin_noise_1D(xx, range){
 
 
 // Code from Arend Peter Teaches
-function get_perlin_noise_2D(xx, yy, range){
+function get_perlin_noise_2D(xx, yy, range, r = false){
 var chunkSize = 8;
 
 	var noise = 0;
@@ -151,8 +163,12 @@ var chunkSize = 8;
 	    range = range div 2;
 	    range = max(1,range);
 	}
-
-	return round(noise);
+	
+	if (r) {
+		return round(noise);
+	}
+	
+	return noise;
 }
 
 function random_seed(range){
@@ -171,7 +187,17 @@ function random_seed(range){
 	seed += Seed + num;
 
 	random_set_seed(seed);
-	rand = irandom_range(0, range);
+	rand = random_range(0, range);
 
-	return round(rand);
+	return rand;
 }
+
+function rect(x, y, width, height, color = c_white, outline = false) {
+	draw_rectangle_color(
+		x-width/2, y-height/2, x+width/2, y+height/2, 
+		color, color, color, color, outline
+	);
+}
+
+
+
