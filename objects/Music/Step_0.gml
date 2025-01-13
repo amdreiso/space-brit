@@ -3,7 +3,7 @@ tick += GameSpeed;
 
 switch ( room ) {
 	
-	case rmDebug:
+	case rmOuterSpace:
 		
 		var ambienceArr = [
 			snd_ambience1,

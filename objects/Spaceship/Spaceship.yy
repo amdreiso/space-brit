@@ -11,8 +11,8 @@
   "name":"Spaceship",
   "overriddenProperties":[],
   "parent":{
-    "name":"Objects",
-    "path":"folders/Objects.yy",
+    "name":"Spaceship",
+    "path":"folders/Objects/Outer Space/Spaceship.yy",
   },
   "parentObjectId":null,
   "persistent":false,

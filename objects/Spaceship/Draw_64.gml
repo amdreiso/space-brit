@@ -1,14 +1,18 @@
 
+// Debug
 draw_stats();
 
+draw_tip("press F to land", c_white, c_red, tipAlpha);
 
-
-
-if (place_meeting(x, y, Planet)) {
+if (distance_to_object(Planet) < 200) {
 	
-	tipAlpha = lerp(tipAlpha, 1, 0.1);
+	tipAlpha = lerp(tipAlpha, 1, 0.05);
 	
-	draw_tip("press space to land", c_white, tipAlpha);
+	if (keyboard_check_pressed(ord("F"))) {
+		room_goto(rmPlanet);
+		
+		audio_stop_all();
+	}
 	
 } else {
 	

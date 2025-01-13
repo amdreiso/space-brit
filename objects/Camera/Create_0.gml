@@ -16,3 +16,6 @@ followSpeed = 0.1;
 
 zoom = 1;
 zoomLerp = zoom;
+
+shakeValue = 0;
+shakePower = 1;

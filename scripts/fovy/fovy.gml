@@ -85,10 +85,20 @@ function button(
 	}
 }
 
-function draw_3d(step, sprite, xscale, yscale, angle = 0, color = c_white, alpha = 1) {
+function draw_3d(step, x, y, sprite, xscale, yscale, angle = 0, color = c_white, alpha = 1, smoothing = false, smoothOffset = 100, smoothStep = 5) {
 	for (var i = 0; i < sprite_get_number(sprite); i++) {
 		var yy = y - (i * step);
-		draw_sprite_ext(sprite, i, x, yy, xscale, yscale, angle, color, alpha);
+		var c = color;
+		
+		if (smoothing) {
+			c = make_color_rgb(
+				smoothOffset + i * smoothStep,
+				smoothOffset + i * smoothStep,
+				smoothOffset + i * smoothStep
+			);
+		}
+		
+		draw_sprite_ext(sprite, i, x, yy, xscale, yscale, angle, c, alpha);
 	}
 }
 
@@ -199,5 +209,19 @@ function rect(x, y, width, height, color = c_white, outline = false) {
 	);
 }
 
+function random_array_argument(array){
+	if (is_array(array)) {
+		return random_range(array[0], array[1]);
+	}
+	
+	return array;
+}
 
-
+function sound3D(emitter, x, y, snd, loop, gain, pitch, offset = 0){
+	if (emitter == -1) {
+		return audio_play_sound_at(snd, x, y, 0, Sound.distance, Sound.dropoff, Sound.multiplier, 
+			loop, -1, random_array_argument(gain), offset, random_array_argument(pitch));
+	}
+	
+	return audio_play_sound_on(emitter, snd, loop, 0, random_array_argument(gain), offset, random_array_argument(pitch));
+}

@@ -17,7 +17,17 @@ for (var i = 0; i < array_length(starKeys); i++) {
 
 
 var s = 1;
-draw_3d(s, spr_spaceship, s, s, direction-90);
+var turretSprite;
+
+if (shootingCooldown > 0) {
+	turretSprite = sTurretCooldown;
+} else {
+	turretSprite = sTurret;
+}
+
+draw_3d(s, x, y+3, turretSprite, s, s, mouseAngle-90);
+
+draw_3d(s, x, y, spr_spaceship, s, s, direction-90);
 
 
 sprite_index = spr_spaceship;

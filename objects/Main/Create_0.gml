@@ -30,10 +30,21 @@ Volume = {
 	effects: 1.0,
 }
 
+globalvar Sound; Sound = {};
+
+Sound.distance = 20;
+Sound.dropoff	= 5;
+Sound.multiplier = 1;
+
+audio_falloff_set_model(audio_falloff_inverse_distance);
+audio_listener_orientation(0, 1, 0, 0, 0, 1);
+
+
 
 // Gameplay
 player = instance_create_layer(0, 0, "Spaceship", Spaceship);
 instance_create_layer(0, 0, "Spaceship", Music);
+instance_create_layer(0, 0, "Spaceship", OuterSpace);
 
 
 repeat (1000) {
@@ -51,7 +62,7 @@ repeat (1000) {
 	);
 	
 	with (obj) {
-		self.depthFactor = (get_perlin_noise_2D(obj.x, obj.y, 1) + 1) / 10;
+		self.depthFactor = (get_perlin_noise_2D(obj.x, obj.y, 1) + 1) / 50;
 
 		self.sprite_index = sStars_particle;
 		self.image_speed = 0;

@@ -20,6 +20,6 @@
   "resourceVersion":"2.0",
   "sampleRate":44100,
   "soundFile":"snd_theme1.wav",
-  "type":0,
+  "type":2,
   "volume":1.0,
 }

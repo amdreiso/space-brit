@@ -1,4 +1,9 @@
 
+// Health
+hp = 1000;
+
+
+
 // Movement
 turn = 0;
 turnForce = 10;
@@ -10,8 +15,13 @@ acceleration = 0.05;
 turnPrecision = 0.25;
 turnSpeed = 0.2;
 
+mouseAngle = 0;
 
 fuel = 1;
+
+
+// Shooting
+shootingCooldown = 0;
 
 
 // Camera
@@ -25,6 +35,7 @@ inBattle = false;
 
 
 // Sound
+emitter = audio_emitter_create();
 propellant = -1;
 
 

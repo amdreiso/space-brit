@@ -1,8 +1,13 @@
 
 if (target == noone) return;
 
-x = lerp(x, target.x, followSpeed);
-y = lerp(y, target.y, followSpeed);
+if (shakeValue > 0) shakeValue = lerp(shakeValue, 0, 0.1);
+
+var shake = power(shakeValue, shakePower);
+
+x = lerp(x, target.x, followSpeed) + random_range(-shake, shake);
+y = lerp(y, target.y, followSpeed) + random_range(-shake, shake);
+
 
 camera_set_view_angle(cam, angle);
 camera_set_view_size(cam, defaultSize.width * zoomLerp, defaultSize.height * zoomLerp);

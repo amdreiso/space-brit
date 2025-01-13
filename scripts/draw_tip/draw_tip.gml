@@ -1,4 +1,4 @@
-function draw_tip(str, color, alpha){
+function draw_tip(str, color, color2, alpha){
 	
 	draw_set_font(fnt_mainTIP);
 	
@@ -13,7 +13,7 @@ function draw_tip(str, color, alpha){
 	draw_text_transformed_color(xx, yy+offset, str, 1, 1, 0, c_black, c_black, c_black, c_black, alpha);
 	draw_text_transformed_color(xx+offset, yy+offset, str, 1, 1, 0, c_black, c_black, c_black, c_black, alpha);
 	
-	draw_text_transformed_color(xx, yy, str, 1, 1, 0, color, color, color, color, alpha);
+	draw_text_transformed_color(xx, yy, str, 1, 1, 0, color2, color2, color, color, alpha);
 	
 	draw_set_font(fnt_main);
 	
