@@ -1,4 +1,8 @@
 
+if (ParticleCount >= Settings.maxParticlesOnScreen) {
+	instance_destroy();
+	return;
+}
 
 color = c_white;
 

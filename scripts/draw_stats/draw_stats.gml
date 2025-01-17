@@ -21,20 +21,10 @@ function draw_stats(){
 	
 	var buttons = [
 		{
-			label: "reset",
+			label: "exit",
 			fn: function(){
 				if (mouse_check_button_pressed(mb_left)) {
-					game_restart();
-				}
-		
-				window_set_cursor(cr_handpoint);
-			},
-		},
-		{
-			label: "reset",
-			fn: function(){
-				if (mouse_check_button_pressed(mb_left)) {
-					game_restart();
+					game_end();
 				}
 		
 				window_set_cursor(cr_handpoint);

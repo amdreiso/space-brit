@@ -12,6 +12,7 @@ GameInfo = {
 
 // Main Scripts
 fovy();
+settings();
 
 
 // Globals
@@ -23,6 +24,8 @@ globalvar StarGrid; StarGrid = ds_map_create();
 globalvar Stars; Stars = {
 	chunk: 128,
 }
+
+globalvar ParticleCount; ParticleCount = 0;
 
 globalvar Volume;
 Volume = {
@@ -48,8 +51,9 @@ instance_create_layer(0, 0, "Spaceship", OuterSpace);
 instance_create_layer(0, 0, "Spaceship", PlanetHandler);
 instance_create_layer(0, 0, "Spaceship", CursorHandler);
 
+layer_enable_fx("Glowing_Particles", false);
 
-repeat (1000) {
+repeat (50) {
 	var xx, yy;
 	var range = new vec2(2000, 1250);
 	
