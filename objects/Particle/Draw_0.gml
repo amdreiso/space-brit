@@ -15,3 +15,5 @@ image_yscale = scale;
 
 
 draw_self();
+
+draw();

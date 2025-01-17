@@ -10,6 +10,7 @@ function fovy(){
 	show_debug_message("Loaded FOVY!");
 }
 
+
 function vec2(x=0, y=0) constructor {self.x=x; self.y=y}
 
 function dim(width=0, height=0) constructor {self.width=width; self.height=height}
@@ -17,7 +18,7 @@ function dim(width=0, height=0) constructor {self.width=width; self.height=heigh
 function rgb(r, g, b) constructor { self.r = r; self.g = g; self.b = b; }
 
 function button(
-	x, y, width, height, 
+	x, y, width, height, label = "",
 	hasOutline = true, outlineColor = c_white, hoverColor = c_white, hoverAlpha = 0.25, hoverFunction = function(){},
 	orientation = 0
 ) {
@@ -48,6 +49,8 @@ function button(
 				
 				hoverFunction();
 			}
+			
+			draw_text(x, y, label);
 			
 			break;
 		
@@ -80,6 +83,95 @@ function button(
 				
 				hoverFunction();
 			}
+			
+			draw_set_halign(fa_center);
+			draw_text(x+width/2, y+height/2, label);
+			draw_set_halign(fa_left);
+			
+			break;
+	}
+}
+
+function button_gui(
+	x, y, width, height, label = "",
+	hasOutline = true, outlineColor = c_white, hoverColor = c_white, hoverAlpha = 0.25, hoverFunction = function(){},
+	orientation = 0
+) {
+	var mx, my;
+	mx = window_mouse_get_x();
+	my = window_mouse_get_y();
+	
+	var range;
+	
+	switch (orientation) {
+		case BUTTON_ORIGIN.Left:
+			
+			range = (mx > x && mx < x + width && my > y && my < y + height);
+			
+			// Draw outline
+			if (hasOutline) {
+				draw_rectangle_color(
+					x, y, 
+					x + width, y + height, 
+					outlineColor, outlineColor, outlineColor, outlineColor, true
+				);
+			}
+			
+			if (range) {
+				draw_set_alpha(hoverAlpha);
+				draw_rectangle_color(
+					x, y, 
+					x + width, y + height, 
+					hoverColor, hoverColor, hoverColor, hoverColor, false
+				);
+				draw_set_alpha(1);
+				
+				hoverFunction();
+			}
+			
+			draw_set_valign(fa_middle);
+			draw_text(x, y + height / 2, label);
+			draw_set_valign(fa_top);
+			
+			break;
+		
+		case BUTTON_ORIGIN.MiddleCenter:
+			
+			range = (
+				mx > x - width / 2 && 
+				mx < x + width / 2 && 
+				my > y - height / 2 && 
+				my < y + height / 2
+			);
+			
+			// Draw outline
+			if (hasOutline) {
+				draw_rectangle_color(
+					x - width / 2, y - height / 2, 
+					x + width / 2, y + height / 2, 
+					outlineColor, outlineColor, outlineColor, outlineColor, true
+				);
+			}
+			
+			if (range) {
+				draw_set_alpha(hoverAlpha);
+				draw_rectangle_color(
+					x - width / 2, y - height / 2, 
+					x + width / 2, y + height / 2, 
+					hoverColor, hoverColor, hoverColor, hoverColor, false
+				);
+				draw_set_alpha(1);
+				
+				hoverFunction();
+			}
+			
+			draw_set_halign(fa_center);
+			draw_set_valign(fa_middle);
+			
+			draw_text(x, y, label);
+			
+			draw_set_halign(fa_left);
+			draw_set_valign(fa_top);
 			
 			break;
 	}
@@ -224,4 +316,14 @@ function sound3D(emitter, x, y, snd, loop, gain, pitch, offset = 0){
 	}
 	
 	return audio_play_sound_on(emitter, snd, loop, 0, random_array_argument(gain), offset, random_array_argument(pitch));
+}
+
+function opt(base, value) {
+	var f = 60;
+	
+  if (value > f) value = f;
+  else if (value < 0) value = 0;
+    
+  var factor = value / f;
+  return base * factor;
 }

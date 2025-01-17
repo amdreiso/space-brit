@@ -12,3 +12,6 @@ move = function(val){}
 
 depthFactor = 1;
 scale = 1;
+
+update = function(){}
+draw = function(){}

@@ -25,10 +25,27 @@ if (shootingCooldown > 0) {
 	turretSprite = sTurret;
 }
 
-draw_3d(s, x, y+3, turretSprite, s, s, mouseAngle-90);
+draw_3d(s, x, y+3, turretSprite, s, s, mouseAngle - 90, c_white, 1, true, 100, 10);
+draw_3d(s, x, y, sSpaceship, s, s, direction-90);
 
-draw_3d(s, x, y, spr_spaceship, s, s, direction-90);
+
+sprite_index = sSpaceship;
 
 
-sprite_index = spr_spaceship;
+
+// Window
+button(x, y, 8, 8, "", false, 0, 0, 0, function(){
+	if (mouse_check_button_pressed(mb_left) && winStatus == -1) {
+		with (instance_create_depth(x, y, -1000, Window)) {
+			
+		}
+	}
+	
+	window_set_cursor(cr_handpoint);
+	
+	draw_text_transformed_color(mouse_x+7.5, mouse_y+.5, "Spaceship", .5, .5, 0, c_black, c_black, c_black, c_black, 1);
+	draw_text_transformed(mouse_x+8, mouse_y, "Spaceship", .5, .5, 0);
+	
+}, BUTTON_ORIGIN.MiddleCenter);
+
 

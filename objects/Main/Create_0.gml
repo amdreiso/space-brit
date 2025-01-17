@@ -45,6 +45,8 @@ audio_listener_orientation(0, 1, 0, 0, 0, 1);
 player = instance_create_layer(0, 0, "Spaceship", Spaceship);
 instance_create_layer(0, 0, "Spaceship", Music);
 instance_create_layer(0, 0, "Spaceship", OuterSpace);
+instance_create_layer(0, 0, "Spaceship", PlanetHandler);
+instance_create_layer(0, 0, "Spaceship", CursorHandler);
 
 
 repeat (1000) {
@@ -86,8 +88,17 @@ repeat (1000) {
 		
 		self.step = 0;
 		self.destroyTime = 0;
+		
+		self.update = function() {
+			
+			if (point_distance_3d(x, 0, 0, Spaceship.x, 0, 0) > 500) {
+				
+			}
+			
+		}
 	}
 }
+
 
 
 // For testing

@@ -1,17 +1,17 @@
 {
   "$GMObject":"",
-  "%Name":"Planet",
+  "%Name":"Window",
   "eventList":[
     {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":0,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
     {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":8,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
     {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":3,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
   ],
   "managed":true,
-  "name":"Planet",
+  "name":"Window",
   "overriddenProperties":[],
   "parent":{
-    "name":"Outer Space",
-    "path":"folders/Objects/Outer Space.yy",
+    "name":"Window",
+    "path":"folders/Objects/Window.yy",
   },
   "parentObjectId":null,
   "persistent":false,

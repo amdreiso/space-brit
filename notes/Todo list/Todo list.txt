@@ -1,0 +1,12 @@
+
+	TODO:
+
+- space generation procedurally generated;
+- planet exploration more fun;
+
+
+
+	DONE:
+
+
+
