@@ -25,6 +25,8 @@ if (shootingCooldown > 0) {
 	turretSprite = sTurret;
 }
 
+
+
 draw_3d(s, x, y+3, turretSprite, s, s, mouseAngle - 90, c_white, 1, true, 100, 10);
 draw_3d(s, x, y, sSpaceship, s, s, direction-90);
 
@@ -32,9 +34,10 @@ draw_3d(s, x, y, sSpaceship, s, s, direction-90);
 sprite_index = sSpaceship;
 
 
-
 // Window
 button(x, y, 8, 8, "", false, 0, 0, 0, function(){
+	if (!Paused) return;
+	
 	if (mouse_check_button_pressed(mb_left) && winStatus == -1) {
 		with (instance_create_depth(x, y, -1000, Window)) {
 			

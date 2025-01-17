@@ -1,10 +1,17 @@
 function settings(){
-	
 	globalvar Settings;
 	Settings = {}
 	
 	with (Settings) {
-		maxParticlesOnScreen = 100;
+		
+		// Audio
+		volume = {
+			master: 1.0,
+			music: 1.0,
+			effects: 1.0,
+		}
+		
+		// Instances
+		maxParticlesOnScreen = 5000;
 	}
-	
 }

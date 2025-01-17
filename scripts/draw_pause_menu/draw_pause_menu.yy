@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"draw_stats",
+  "%Name":"draw_pause_menu",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"draw_stats",
+  "name":"draw_pause_menu",
   "parent":{
     "name":"GUI",
     "path":"folders/Scripts/Draw/GUI.yy",

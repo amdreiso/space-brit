@@ -27,12 +27,8 @@ globalvar Stars; Stars = {
 
 globalvar ParticleCount; ParticleCount = 0;
 
-globalvar Volume;
-Volume = {
-	music: 1.0,
-	effects: 1.0,
-}
 
+// Audio
 globalvar Sound; Sound = {};
 
 Sound.distance = 20;

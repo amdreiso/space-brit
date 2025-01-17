@@ -90,7 +90,7 @@ handleMovement = function() {
 			propellantSound = sound3D(emitter, xx, yy, snd_propellant, false, 0, [0.98, 1.01]);
 		}
 	
-		audio_sound_gain(propellantSound, 0.03 * Volume.effects, 300);
+		audio_sound_gain(propellantSound, 0.03 * Settings.volume.effects, 300);
 		audio_emitter_position(emitter, xx, yy, 0);
 	
 	} else {

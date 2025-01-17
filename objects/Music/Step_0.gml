@@ -21,10 +21,8 @@ switch ( room ) {
 			
 			audio_play_sound(
 				song, 0, false, 
-				random_range(0.25, 0.55) * Volume.music, 0
+				random_range(0.25, 0.55) * Settings.volume.music, 0
 			);
-			
-			show_debug_message("Ambience Song");
 			
 			tick = 0;
 		}
