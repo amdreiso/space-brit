@@ -1,4 +1,6 @@
 
+busy = (Paused);
+
 
 // Movement
 handleMovement();

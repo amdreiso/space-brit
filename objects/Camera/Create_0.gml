@@ -9,6 +9,8 @@ defaultSize = new dim(
 	camera_get_view_height(cam)
 );
 
+offset = new vec2();
+
 size = defaultSize;
 
 angle = 0;

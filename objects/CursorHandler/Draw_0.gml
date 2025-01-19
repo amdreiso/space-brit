@@ -1,5 +1,8 @@
 
+
 depth = 999999;
+
+if (!Paused) depth = -9999999;
 
 var player = get_player();
 var xx = player.x;

@@ -94,7 +94,7 @@ function button(
 
 function button_gui(
 	x, y, width, height, label = "",
-	hasOutline = true, outlineColor = c_white, hoverColor = c_white, hoverAlpha = 0.25, hoverFunction = function(){},
+	hasOutline = true, outlineColor = c_white, hoverColor = c_white, hoverAlpha = 0.25, alpha = 1, hoverFunction = function(){},
 	orientation = 0
 ) {
 	var mx, my;
@@ -110,15 +110,19 @@ function button_gui(
 			
 			// Draw outline
 			if (hasOutline) {
+				draw_set_alpha(alpha);
+				
 				draw_rectangle_color(
 					x, y, 
 					x + width, y + height, 
 					outlineColor, outlineColor, outlineColor, outlineColor, true
 				);
+				
+				draw_set_alpha(1);
 			}
 			
 			if (range) {
-				draw_set_alpha(hoverAlpha);
+				draw_set_alpha(hoverAlpha * alpha);
 				draw_rectangle_color(
 					x, y, 
 					x + width, y + height, 
@@ -129,8 +133,9 @@ function button_gui(
 				hoverFunction();
 			}
 			
+			
 			draw_set_valign(fa_middle);
-			draw_text(x, y + height / 2, label);
+			draw_text_color(x, y + height / 2, label, c_white, c_white, c_white, c_white, alpha);
 			draw_set_valign(fa_top);
 			
 			break;
@@ -178,6 +183,7 @@ function button_gui(
 }
 
 function draw_3d(step, x, y, sprite, xscale, yscale, angle = 0, color = c_white, alpha = 1, smoothing = false, smoothOffset = 100, smoothStep = 5) {
+	draw_set_alpha(alpha);
 	for (var i = 0; i < sprite_get_number(sprite); i++) {
 		var yy = y - (i * step);
 		var c = color;
@@ -192,6 +198,7 @@ function draw_3d(step, x, y, sprite, xscale, yscale, angle = 0, color = c_white,
 		
 		draw_sprite_ext(sprite, i, x, yy, xscale, yscale, angle, c, alpha);
 	}
+	draw_set_alpha(1);
 }
 
 function save_id(file, save, prettify = false) {

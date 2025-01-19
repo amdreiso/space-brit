@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"draw_pause_menu",
+  "%Name":"set_pause",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"draw_pause_menu",
+  "name":"set_pause",
   "parent":{
-    "name":"GUI",
-    "path":"folders/Scripts/Draw/GUI.yy",
+    "name":"Scripts",
+    "path":"folders/Scripts.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

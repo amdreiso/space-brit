@@ -14,12 +14,14 @@ GameInfo = {
 fovy();
 settings();
 
+item_data();
+
 
 // Globals
 globalvar GameSpeed; GameSpeed = 1;
 globalvar Paused; Paused = false;
 globalvar Debug; Debug = false;
-globalvar Seed; Seed = 0;
+globalvar Seed; Seed = irandom(10000000);
 globalvar StarGrid; StarGrid = ds_map_create();
 globalvar Stars; Stars = {
 	chunk: 128,
@@ -47,7 +49,7 @@ instance_create_layer(0, 0, "Spaceship", OuterSpace);
 instance_create_layer(0, 0, "Spaceship", PlanetHandler);
 instance_create_layer(0, 0, "Spaceship", CursorHandler);
 
-layer_enable_fx("Glowing_Particles", false);
+layer_enable_fx("Glowing_Particles", true);
 
 repeat (50) {
 	var xx, yy;
@@ -90,17 +92,36 @@ repeat (50) {
 		self.destroyTime = 0;
 		
 		self.update = function() {
-			
 			if (point_distance_3d(x, 0, 0, Spaceship.x, 0, 0) > 500) {
 				
 			}
-			
 		}
 	}
 }
 
 
+// Pause menu
+enum PM_PAGE {
+	None,
+	Home,
+	Settings,
+}
+
+pmPage = PM_PAGE.None;
+pm = {
+	width: 400,
+	height: 600,
+	setWidth: 400,
+	setHeight: 600,
+	
+	alpha: 0,
+	
+	backgroundColor: $FF080808,
+	outlineColor: $FF181818,
+}
+
+
 
 // For testing
-Debug = true;
+Debug = false;
 

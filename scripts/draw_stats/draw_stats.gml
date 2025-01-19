@@ -55,6 +55,7 @@ function draw_stats(){
 	draw_text(0, 3 * sep, $"version: { GameInfo.version[0] }.{ GameInfo.version[1] }.{ GameInfo.version[2] } { GameInfo.release }");
 	draw_text(0, 4 * sep, $"{fps} fps");
 	draw_text(0, 5 * sep, $"x: { player.x } y: { player.y }");
+	draw_text(0, 6 * sep, $"p: { instance_number(Particle) } o: { instance_number(all) }");
 	
 	
 }

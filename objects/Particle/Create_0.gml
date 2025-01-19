@@ -1,4 +1,6 @@
 
+busy = false;
+
 if (ParticleCount >= Settings.maxParticlesOnScreen) {
 	instance_destroy();
 	return;
@@ -19,3 +21,11 @@ scale = 1;
 
 update = function(){}
 draw = function(){}
+
+fadeIn = 0;
+fadeOut = 0;
+fadeTime = 0.1;
+
+alpha = 1;
+
+if (fadeIn != 0) alpha = 0;
