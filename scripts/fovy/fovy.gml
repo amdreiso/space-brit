@@ -334,3 +334,30 @@ function opt(base, value) {
   var factor = value / f;
   return base * factor;
 }
+
+
+function slider(val, x, y, width, height, handleWidth, color = c_white) {
+	var handleX = (x + val) - width / 2;
+	
+	draw_line_color(x - width/2, y, x + width/2, y, color, color);
+	
+	button_gui(handleX, y, handleWidth, height, "", true, color, c_white, 1, 1, function(){
+		if (mouse_check_button(mb_left)) {
+			var mx = window_mouse_get_x();
+			var my = window_mouse_get_y();
+	
+			var pos = mx - x;
+			
+			return (pos);
+		}
+	});
+	
+}
+
+
+
+
+
+
+
+

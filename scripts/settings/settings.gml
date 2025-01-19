@@ -12,6 +12,6 @@ function settings(){
 		}
 		
 		// Instances
-		maxParticlesOnScreen = 5000;
+		maxParticlesOnScreen = 1000;
 	}
 }

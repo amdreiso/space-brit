@@ -244,6 +244,8 @@ drawMenu = function() {
 	
 	if (menuAlpha < 0.05) return false;
 	
+	if (keyboard_check_pressed(vk_escape)) menu = false;
+	
 	// Draw menu
 	var c0 = $FF080808, c1 = $FF181818;
 	var xx = window_get_width() / 4;
@@ -289,7 +291,7 @@ drawMenu = function() {
 			
 			var buttonY = modelY + 75;
 			var buttonHeight = 28;
-			var buttonSep = 28 * 1.5;
+			var buttonSep = 28 * 1.25;
 			
 			button_gui(
 				xx, buttonY, ww/1.5, buttonHeight, "Components",

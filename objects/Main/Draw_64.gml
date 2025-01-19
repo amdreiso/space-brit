@@ -8,28 +8,6 @@ y0 = window_get_height() / 2;
 
 var pmOffset = 1;
 
-var pmButtons = [
-	{
-		label: "settings",
-		fn: function() {
-			if (mouse_check_button_pressed(mb_left)) {
-				
-			}
-			window_set_cursor(cr_handpoint);
-		}
-	},
-	{
-		label: "resume",
-		fn: function() {
-			if (mouse_check_button_pressed(mb_left)) {
-				set_pause(false);
-			}
-			window_set_cursor(cr_handpoint);
-		}
-	},
-];
-
-
 if (Paused) {
 	
 	draw_set_alpha(0.5);
@@ -48,24 +26,89 @@ if (Paused) {
 }
 
 
-if (pm.width > pmOffset && pm.height > pmOffset) {
+if (pm.width > pmOffset && pm.height > pmOffset && pm.alpha > 0.05) {
 	draw_set_alpha(pm.alpha);
 	
 	rect(x0, y0, pm.width, pm.height, pm.backgroundColor, false);
 	rect(x0, y0, pm.width, pm.height, pm.outlineColor, true);
 	
-	for (var i = 0; i < array_length(pmButtons); i++) {
-		var buttonHeight = 32;
-		var buttonY = (y0 - pm.height / 3) + i * buttonHeight;
+	var xx = window_get_width() / 2;
+	var yy = window_get_height() / 2;
+	
+	var buttonWidth = pm.width / 1.5;
+	var buttonHeight = 28;
+	var buttonSep = 28 * 1.25;
+	var checkboxSize = 15;
+	
+	var top = (yy - pm.height / 2) + 50;
+	
+	switch (pm.page) {
 		
-		if (!Paused) break;
+		case PM_PAGE.Home:
+			
+			button_gui(
+				xx, top, buttonWidth, buttonHeight,
+				"Settings", true, $181818, c_ltgray, 0.10, pm.alpha,
+				function(){
+					if (mouse_check_button_pressed(mb_left)) {
+						pm.page = PM_PAGE.Settings;
+					}
+				}, BUTTON_ORIGIN.MiddleCenter
+			);
+			
+			button_gui(
+				xx, top + 1 * buttonSep, buttonWidth, buttonHeight,
+				"Resume", true, $181818, c_ltgray, 0.10, pm.alpha,
+				function(){
+					if (mouse_check_button_pressed(mb_left)) {
+						Paused = false;
+					}
+				}, BUTTON_ORIGIN.MiddleCenter
+			);
+			
+			break;
 		
-		button_gui(
-			x0, buttonY, pm.width, buttonHeight, 
-			pmButtons[i].label, false, 0, c_ltgray, 0.2, pm.alpha,
-			pmButtons[i].fn(), BUTTON_ORIGIN.MiddleCenter
-		);
+		case PM_PAGE.Settings:
+			
+			button_gui(
+				xx, top, buttonWidth, buttonHeight,
+				"Go back", true, $181818, c_ltgray, 0.10, pm.alpha,
+				function(){
+					if (mouse_check_button_pressed(mb_left)) {
+						pm.page = PM_PAGE.Home;
+					}
+				}, BUTTON_ORIGIN.MiddleCenter
+			);
+			
+			
+			// Settings
+			var x2 = (xx - pm.width / 2) + 25;
+			
+			button_gui(
+				x2, top + buttonSep, checkboxSize, checkboxSize,
+				"", true, $181818, c_ltgray, 0.10, pm.alpha,
+				function(){
+					if (mouse_check_button_pressed(mb_left)) {
+						var str = "Glowing_Particles";
+						
+						layer_enable_fx(
+							str, 
+							!layer_fx_is_enabled(str)
+						);
+					}
+				}, BUTTON_ORIGIN.MiddleCenter
+			);
+			draw_text(x2 + checkboxSize * 2, top + buttonSep, "Toggle glow effect");
+			
+			
+			
+			
+			
+			
+			break;
+		
 	}
+	
 	
 	draw_set_alpha(1);
 }

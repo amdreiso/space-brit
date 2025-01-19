@@ -49,7 +49,6 @@ instance_create_layer(0, 0, "Spaceship", OuterSpace);
 instance_create_layer(0, 0, "Spaceship", PlanetHandler);
 instance_create_layer(0, 0, "Spaceship", CursorHandler);
 
-layer_enable_fx("Glowing_Particles", true);
 
 repeat (50) {
 	var xx, yy;
@@ -102,16 +101,16 @@ repeat (50) {
 
 // Pause menu
 enum PM_PAGE {
-	None,
 	Home,
 	Settings,
 }
 
-pmPage = PM_PAGE.None;
 pm = {
-	width: 400,
+	page: PM_PAGE.Home,
+	
+	width: 500,
 	height: 600,
-	setWidth: 400,
+	setWidth: 500,
 	setHeight: 600,
 	
 	alpha: 0,
