@@ -53,6 +53,7 @@
     {"name":"snd_shoot","order":2,"path":"sounds/snd_shoot/snd_shoot.yy",},
     {"name":"sPlanet2","order":1,"path":"sprites/sPlanet2/sPlanet2.yy",},
     {"name":"sPlayerMove","order":1,"path":"sprites/sPlayerMove/sPlayerMove.yy",},
+    {"name":"sRawIron","order":1,"path":"sprites/sRawIron/sRawIron.yy",},
     {"name":"sStars_particle","order":1,"path":"sprites/sStars_particle/sStars_particle.yy",},
     {"name":"sTurret","order":1,"path":"sprites/sTurret/sTurret.yy",},
     {"name":"sTurretCooldown","order":2,"path":"sprites/sTurretCooldown/sTurretCooldown.yy",},

@@ -48,7 +48,7 @@ function draw_stats(){
 		
 		var width = 75;
 		
-		button_gui(1 + i * (width + 1), 1, width, sep, buttons[i].label, true, c_white, c_white, 0.25, buttons[i].fn, BUTTON_ORIGIN.Left);
+		button_gui(1 + i * (width + 1), 1, width, sep, buttons[i].label, true, c_white, c_white, 0.25, 1, buttons[i].fn, BUTTON_ORIGIN.Left);
 	}
 	
 	draw_text(0, 2 * sep,	$"{ GameInfo.name} made by { GameInfo.author}");

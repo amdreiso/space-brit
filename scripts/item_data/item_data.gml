@@ -62,12 +62,12 @@ function item_data(){
 	}
 	
 	
-	add(ITEM.BasicPropeller,		new item(ITEM_TYPE.Propeller,			"basic propeller",			-1,				{}));
-	add(ITEM.BasicTurret,				new item(ITEM_TYPE.Turret,				"basic turret",					-1,				{}));
-	add(ITEM.BasicInventory,		new item(ITEM_TYPE.Inventory,			"basic inventory",			-1,				{}));
+	add(ITEM.BasicPropeller,		new item(ITEM_TYPE.Propeller,			"basic propeller",			-1,						{}));
+	add(ITEM.BasicTurret,				new item(ITEM_TYPE.Turret,				"basic turret",					-1,						{}));
+	add(ITEM.BasicInventory,		new item(ITEM_TYPE.Inventory,			"basic inventory",			-1,						{}));
 	
-	add(ITEM.RawIron,						new item(ITEM_TYPE.Normal,				"raw iron",							-1,				{}));
-	add(ITEM.Iron,							new item(ITEM_TYPE.Normal,				"iron",									-1,				{}));
-	add(ITEM.Coal,							new item(ITEM_TYPE.Normal,				"coal",									sCoal,		{}));
+	add(ITEM.RawIron,						new item(ITEM_TYPE.Normal,				"raw iron",							sRawIron,			{}));
+	add(ITEM.Iron,							new item(ITEM_TYPE.Normal,				"iron",									-1,						{}));
+	add(ITEM.Coal,							new item(ITEM_TYPE.Normal,				"coal",									sCoal,				{}));
 	
 }

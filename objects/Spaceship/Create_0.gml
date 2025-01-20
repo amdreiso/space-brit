@@ -195,17 +195,45 @@ tipAlpha = 0;
 
 
 // Inventory
-inventory = [];
-
-repeat (ItemData[? inventoryID].components.capacity) {
-	array_push(inventory, {
-		itemID: -1,
-		amount: 0,
-	});
+inventorySlot = function(_itemID, _amount) {
+	return {
+		itemID: _itemID,
+		amount: _amount,
+	}
 }
 
-inventory[0].itemID = ITEM.Coal;
-inventory[0].amount = 12;
+inventory = [];
+inventoryGrab = {
+	itemID: -1,
+	amount: 0,
+	pos: -1,
+};
+
+repeat (ItemData[? inventoryID].components.capacity) {
+	array_push(inventory, inventorySlot(-1, 0));
+}
+
+inventoryAdd = function(itemID) {
+	
+	for (var i = 0; i < array_length(inventory) - 1; i++) {
+		var slot = inventory[i];
+		
+		if (slot.itemID == itemID && slot.amount < ITEM_MAX_STACK) {
+			
+			slot.amount ++;
+			break;
+			
+		} else if (slot.itemID == -1) {
+			
+			slot.itemID = itemID;
+			slot.amount = 1;
+			
+			break;
+			
+		}
+	}
+	
+}
 
 
 
@@ -238,6 +266,7 @@ menuPage = 0;
 menuAlpha = 0;
 menuModelTheta = irandom(360);
 menuModelThetaForce = 0;
+menuLastItem = -1;
 
 menuSize = new dim(500, 600);
 
@@ -428,7 +457,6 @@ drawMenu = function() {
 				var itemID = inventory[i].itemID;
 				
 				if (itemID != -1) {
-					itemName = ItemData[? itemID].name;
 					itemSpr = ItemData[? itemID].sprite;
 					
 					if (itemSpr != -1) {
@@ -437,10 +465,122 @@ drawMenu = function() {
 					}
 				}
 				
+				if (selectedSlot != -1 && inventory[selectedSlot].itemID != -1) {
+					itemName = ItemData[? inventory[selectedSlot].itemID].name;
+				}
+				
 				
 				button_gui(slotX, slotY, slotSize, slotSize, "", true, $181818, c_ltgray, 0.1, menuAlpha, function(){
 					
 					selectedSlot = ii;
+					
+					if (mouse_check_button_pressed(mb_left)) {
+						if (selectedSlot == -1) return;
+						
+						if (inventoryGrab.itemID == -1) {
+							
+							// Pass item to inventoryGrab
+							inventoryGrab.itemID			= inventory[selectedSlot].itemID;
+							inventoryGrab.amount			= inventory[selectedSlot].amount;
+							inventoryGrab.pos					= ii;
+							
+							// Empty slot you took the item from
+							inventory[selectedSlot] = inventorySlot(-1, 0);
+							
+						} else {
+							
+							// If the slot you're putting the item in is empty
+							if (inventory[selectedSlot].itemID == -1) {
+								
+								// Set slot
+								inventory[selectedSlot].itemID = inventoryGrab.itemID;
+								inventory[selectedSlot].amount = inventoryGrab.amount;
+								
+								// Reset grabbed item
+								inventoryGrab.itemID		= -1;
+								inventoryGrab.amount		= 0;
+								inventoryGrab.pos				= -1;
+								
+							} else 
+							
+							// If the slot has the same item
+							if (inventory[selectedSlot].itemID == inventoryGrab.itemID) {
+								
+								// If the sum of both item's amount is less than a stack, add them
+								if (inventory[selectedSlot].amount + inventoryGrab.amount < ITEM_MAX_STACK + 1) {
+									
+									inventory[selectedSlot].amount += inventoryGrab.amount;
+									
+									// Reset grabbed item
+									inventoryGrab.itemID		= -1;
+									inventoryGrab.amount		= 0;
+									inventoryGrab.pos				= -1;
+									
+								} else {
+									
+									var val = ITEM_MAX_STACK - inventory[selectedSlot].amount;
+									
+									inventoryGrab.amount -= val;
+									
+									inventory[selectedSlot].amount = ITEM_MAX_STACK;
+									
+								}
+								
+							} else {
+								
+								inventoryGrab.itemID ^= inventory[selectedSlot].itemID;
+								inventoryGrab.amount ^= inventory[selectedSlot].amount;
+								
+								inventory[selectedSlot].itemID ^= inventoryGrab.itemID;
+								inventory[selectedSlot].amount ^= inventoryGrab.amount;
+								
+								inventoryGrab.itemID ^= inventory[selectedSlot].itemID;
+								inventoryGrab.amount ^= inventory[selectedSlot].amount;
+								
+								
+							}
+							
+						}
+						
+					}
+					
+					
+					if (mouse_check_button_pressed(mb_right)) {
+						if (selectedSlot == -1) return;
+						
+						if (inventoryGrab.itemID == -1) {
+							
+							// Grab half of the items
+							if (inventory[selectedSlot].itemID != -1 && inventory[selectedSlot].amount > 1) {
+								
+								inventoryGrab.amount += ceil(inventory[selectedSlot].amount / 2);
+								inventoryGrab.itemID = inventory[selectedSlot].itemID;
+								inventoryGrab.pos = ii;
+								
+								inventory[selectedSlot].amount = floor(inventory[selectedSlot].amount / 2);
+								
+							}
+							
+						} else {
+							
+							if (inventory[selectedSlot].itemID == -1 || inventory[selectedSlot].itemID == inventoryGrab.itemID) {
+								
+								inventoryGrab.amount --;
+								
+								inventory[selectedSlot].itemID = inventoryGrab.itemID;
+								inventory[selectedSlot].amount ++;
+								
+								if (inventoryGrab.amount <= 0) {
+									inventoryGrab.itemID = -1;
+									inventoryGrab.amount = 0;
+									inventoryGrab.pos = -1;
+								}
+								
+							}
+							
+						}
+					}
+					
 					
 					window_set_cursor(cr_handpoint);
 					
@@ -452,7 +592,7 @@ drawMenu = function() {
 				}
 			}
 			
-			if (selectedSlot != -1) {
+			if (selectedSlot != -1 && inventoryGrab.itemID == -1) {
 				draw_text(
 					window_mouse_get_x() + 20,
 					window_mouse_get_y() - 10,
@@ -460,14 +600,19 @@ drawMenu = function() {
 				);
 			}
 			
+			if (inventoryGrab.itemID != -1) {
+				var item = ItemData[? inventoryGrab.itemID];
+				
+				if (item.sprite == -1) return;
+				
+				draw_sprite_ext(item.sprite, 0, window_mouse_get_x(), window_mouse_get_y(), 1.90, 1.90, 0, c_white, 1);
+			}
+			
 			break;
 		
 	}
 	
-	
-	
 	draw_set_alpha(1);
-	
 }
 
 
