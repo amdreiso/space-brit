@@ -8,9 +8,9 @@ hp = 1000;
 
 
 // Components
-propellerID					= 0;
-turretID						= 1;
-inventoryID					= 2;
+propellerID					= ITEM.BasicPropeller;
+turretID						= ITEM.BasicTurret;
+inventoryID					= ITEM.BasicInventory;
 
 
 // Movement
@@ -100,7 +100,7 @@ handleMovement = function() {
 				
 				self.step = irandom_range(10, 20);
 				
-				var colorArray = ItemData[other.propellerID].components.flameColor;
+				var colorArray = ItemData[? other.propellerID].components.flameColor;
 				var colorIndex = irandom(array_length(colorArray)-1);
 				
 				self.color = [colorArray[colorIndex], black, random_range(0.01, 0.05)];
@@ -197,12 +197,15 @@ tipAlpha = 0;
 // Inventory
 inventory = [];
 
-repeat (ItemData[inventoryID].components.capacity) {
+repeat (ItemData[? inventoryID].components.capacity) {
 	array_push(inventory, {
 		itemID: -1,
 		amount: 0,
 	});
 }
+
+inventory[0].itemID = ITEM.Coal;
+inventory[0].amount = 12;
 
 
 
@@ -425,11 +428,11 @@ drawMenu = function() {
 				var itemID = inventory[i].itemID;
 				
 				if (itemID != -1) {
-					itemName = ItemData[itemID].name;
-					itemSpr = ItemData[itemID].sprite;
+					itemName = ItemData[? itemID].name;
+					itemSpr = ItemData[? itemID].sprite;
 					
 					if (itemSpr != -1) {
-						var sprScale = 1;
+						var sprScale = 1.5;
 						draw_sprite_ext(itemSpr, -1, slotX, slotY, sprScale, sprScale, 0, c_white, 1);
 					}
 				}
@@ -443,6 +446,10 @@ drawMenu = function() {
 					
 				}, BUTTON_ORIGIN.MiddleCenter);
 				
+				if (inventory[i].amount > 1) {
+					var d = 3.5;
+					draw_text(slotX + slotSize / d, slotY + slotSize / d, inventory[i].amount);
+				}
 			}
 			
 			if (selectedSlot != -1) {

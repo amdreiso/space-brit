@@ -51,11 +51,11 @@ function draw_stats(){
 		button_gui(1 + i * (width + 1), 1, width, sep, buttons[i].label, true, c_white, c_white, 0.25, buttons[i].fn, BUTTON_ORIGIN.Left);
 	}
 	
-	draw_text(0, 2 * sep,	$"{ GameInfo.name } made by { GameInfo.author }");
-	draw_text(0, 3 * sep, $"version: { GameInfo.version[0] }.{ GameInfo.version[1] }.{ GameInfo.version[2] } { GameInfo.release }");
+	draw_text(0, 2 * sep,	$"{ GameInfo.name} made by { GameInfo.author}");
+	draw_text(0, 3 * sep, $"version: { GameInfo.version[0]}.{ GameInfo.version[1]}.{ GameInfo.version[2]} { GameInfo.release}");
 	draw_text(0, 4 * sep, $"{fps} fps");
-	draw_text(0, 5 * sep, $"x: { player.x } y: { player.y }");
-	draw_text(0, 6 * sep, $"p: { instance_number(Particle) } o: { instance_number(all) }");
+	draw_text(0, 5 * sep, $"x: { player.x} y: { player.y}");
+	draw_text(0, 6 * sep, $"p: { instance_number(Particle)} o: { instance_number(all)}");
 	
 	
 }

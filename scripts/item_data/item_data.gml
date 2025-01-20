@@ -1,20 +1,14 @@
 
-enum ITEM_TYPE {
-	Normal,
-	Propeller,
-	Turret,
-	Inventory,
-}
 
 function item_data(){
 	
 	globalvar ItemData;
-	ItemData = [];
+	ItemData = ds_map_create();
 	
-	var item = function(type, name, sprite, componentVariables) constructor {
+	var item = function(type, name, spr, componentVariables) constructor {
 		self.type = type;
 		self.name = name;
-		self.sprite = sprite;
+		self.sprite = spr;
 		self.components = {};
 		
 		
@@ -63,14 +57,17 @@ function item_data(){
 		}
 	}
 	
-	var add = function(val) {
-		array_push(ItemData, val);
+	var add = function(itemID, val) {
+		ItemData[? itemID] = val;
 	}
 	
 	
-	add(new item(ITEM_TYPE.Propeller,			"basic propeller",			-1,				{}));
-	add(new item(ITEM_TYPE.Turret,				"basic turret",					-1,				{}));
-	add(new item(ITEM_TYPE.Inventory,			"basic inventory",			-1,				{}));
+	add(ITEM.BasicPropeller,		new item(ITEM_TYPE.Propeller,			"basic propeller",			-1,				{}));
+	add(ITEM.BasicTurret,				new item(ITEM_TYPE.Turret,				"basic turret",					-1,				{}));
+	add(ITEM.BasicInventory,		new item(ITEM_TYPE.Inventory,			"basic inventory",			-1,				{}));
 	
+	add(ITEM.RawIron,						new item(ITEM_TYPE.Normal,				"raw iron",							-1,				{}));
+	add(ITEM.Iron,							new item(ITEM_TYPE.Normal,				"iron",									-1,				{}));
+	add(ITEM.Coal,							new item(ITEM_TYPE.Normal,				"coal",									sCoal,		{}));
 	
 }

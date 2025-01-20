@@ -1,6 +1,19 @@
 function load_enums(){
 	
-	// SAVE FILES
-	#macro SETTINGS_SF "settings.json"
+enum ITEM_TYPE {
+	Normal,
+	Propeller,
+	Turret,
+	Inventory,
+}
+
+enum ITEM {
+	BasicPropeller,
+	BasicTurret,
+	BasicInventory,
+	RawIron,
+	Iron,
+	Coal,
+}
 	
 }

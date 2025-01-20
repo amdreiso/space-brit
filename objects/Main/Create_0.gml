@@ -12,7 +12,7 @@ GameInfo = {
 
 // Main Scripts
 fovy();
-load_enums();
+load_macros();
 settings();
 
 item_data();
