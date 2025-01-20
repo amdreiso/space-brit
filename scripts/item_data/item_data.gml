@@ -8,13 +8,13 @@ enum ITEM_TYPE {
 
 function item_data(){
 	
-	globalvar SpaceshipData;
-	SpaceshipData = [];
+	globalvar ItemData;
+	ItemData = [];
 	
-	var item = function(type, name, icon, componentVariables) constructor {
+	var item = function(type, name, sprite, componentVariables) constructor {
 		self.type = type;
 		self.name = name;
-		self.icon = icon;
+		self.sprite = sprite;
 		self.components = {};
 		
 		
@@ -64,13 +64,13 @@ function item_data(){
 	}
 	
 	var add = function(val) {
-		array_push(SpaceshipData, val);
+		array_push(ItemData, val);
 	}
 	
 	
-	add(new item(ITEM_TYPE.Propeller,		"basic propeller", -1, {}));
-	add(new item(ITEM_TYPE.Turret,			"basic turret", -1, {}));
-	add(new item(ITEM_TYPE.Inventory,		"basic inventory", -1, {}));
+	add(new item(ITEM_TYPE.Propeller,			"basic propeller",			-1,				{}));
+	add(new item(ITEM_TYPE.Turret,				"basic turret",					-1,				{}));
+	add(new item(ITEM_TYPE.Inventory,			"basic inventory",			-1,				{}));
 	
 	
 }

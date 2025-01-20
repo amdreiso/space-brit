@@ -12,6 +12,7 @@ GameInfo = {
 
 // Main Scripts
 fovy();
+load_enums();
 settings();
 
 item_data();
@@ -119,8 +120,14 @@ pm = {
 	outlineColor: $FF181818,
 }
 
+saveSettings = function() {
+	save_id(SETTINGS_SF, Settings, true);
+}
 
 
 // For testing
 Debug = false;
+
+
+
 

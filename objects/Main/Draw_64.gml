@@ -25,7 +25,6 @@ if (Paused) {
 	
 }
 
-
 if (pm.width > pmOffset && pm.height > pmOffset && pm.alpha > 0.05) {
 	draw_set_alpha(pm.alpha);
 	
@@ -38,31 +37,36 @@ if (pm.width > pmOffset && pm.height > pmOffset && pm.alpha > 0.05) {
 	var buttonWidth = pm.width / 1.5;
 	var buttonHeight = 28;
 	var buttonSep = 28 * 1.25;
-	var checkboxSize = 15;
+	var checkboxSize = 22;
 	
 	var top = (yy - pm.height / 2) + 50;
+	
 	
 	switch (pm.page) {
 		
 		case PM_PAGE.Home:
 			
+			draw_text(xx, top - 14, "paused");
+	
 			button_gui(
-				xx, top, buttonWidth, buttonHeight,
+				xx, top + buttonSep, buttonWidth, buttonHeight,
 				"Settings", true, $181818, c_ltgray, 0.10, pm.alpha,
 				function(){
 					if (mouse_check_button_pressed(mb_left)) {
 						pm.page = PM_PAGE.Settings;
 					}
+					window_set_cursor(cr_handpoint);
 				}, BUTTON_ORIGIN.MiddleCenter
 			);
 			
 			button_gui(
-				xx, top + 1 * buttonSep, buttonWidth, buttonHeight,
+				xx, top + 2 * buttonSep, buttonWidth, buttonHeight,
 				"Resume", true, $181818, c_ltgray, 0.10, pm.alpha,
 				function(){
 					if (mouse_check_button_pressed(mb_left)) {
-						Paused = false;
+						set_pause(false);
 					}
+					window_set_cursor(cr_handpoint);
 				}, BUTTON_ORIGIN.MiddleCenter
 			);
 			
@@ -77,16 +81,24 @@ if (pm.width > pmOffset && pm.height > pmOffset && pm.alpha > 0.05) {
 					if (mouse_check_button_pressed(mb_left)) {
 						pm.page = PM_PAGE.Home;
 					}
+					window_set_cursor(cr_handpoint);
 				}, BUTTON_ORIGIN.MiddleCenter
 			);
 			
 			
 			// Settings
-			var x2 = (xx - pm.width / 2) + 25;
+			var x2 = (xx);
+			var sliderOffset = (pm.width / 2) - (buttonHeight * 2) - 2;
+			var sliderOffset2 = (pm.width / 2) - buttonHeight;
 			
+			draw_set_halign(fa_center);
+			draw_set_valign(fa_middle);
+			
+			
+			// GLOW EFFECT
 			button_gui(
-				x2, top + buttonSep, checkboxSize, checkboxSize,
-				"", true, $181818, c_ltgray, 0.10, pm.alpha,
+				x2, top + 2 * buttonSep, buttonWidth, buttonHeight,
+				"Toggle Glow Effect: "+string(layer_fx_is_enabled("Glowing_Particles")), true, $181818, c_ltgray, 0.10, pm.alpha,
 				function(){
 					if (mouse_check_button_pressed(mb_left)) {
 						var str = "Glowing_Particles";
@@ -95,20 +107,82 @@ if (pm.width > pmOffset && pm.height > pmOffset && pm.alpha > 0.05) {
 							str, 
 							!layer_fx_is_enabled(str)
 						);
+						
+						Settings.glowEffect = layer_fx_is_enabled(str);
+						
+						saveSettings();
 					}
+					window_set_cursor(cr_handpoint);
 				}, BUTTON_ORIGIN.MiddleCenter
 			);
-			draw_text(x2 + checkboxSize * 2, top + buttonSep, "Toggle glow effect");
 			
 			
+			// AMOUNT OF PARTICLES
+			draw_set_halign(fa_center);
+			draw_set_valign(fa_middle);
+			
+			draw_text(xx, top + 3 * buttonSep, "Max particles on screen: "+string(Settings.maxParticlesOnScreen));
+			
+			button_gui(
+				xx - sliderOffset, top + 3 * buttonSep, buttonHeight, buttonHeight,
+				"<", true, $181818, c_ltgray, 0.10, pm.alpha,
+				function(){
+					if (mouse_check_button(mb_left) && Settings.maxParticlesOnScreen > 0) {
+						Settings.maxParticlesOnScreen --;
+						
+						saveSettings();
+					}
+					window_set_cursor(cr_handpoint);
+				}, BUTTON_ORIGIN.MiddleCenter
+			);
+			
+			button_gui(
+				xx + sliderOffset, top + 3 * buttonSep, buttonHeight, buttonHeight,
+				">", true, $181818, c_ltgray, 0.10, pm.alpha,
+				function(){
+					if (mouse_check_button(mb_left) && Settings.maxParticlesOnScreen < 5000) {
+						Settings.maxParticlesOnScreen ++;
+						
+						saveSettings();
+					}
+					window_set_cursor(cr_handpoint);
+				}, BUTTON_ORIGIN.MiddleCenter
+			);
+			
+			button_gui(
+				xx - sliderOffset2, top + 3 * buttonSep, buttonHeight, buttonHeight,
+				"<<", true, $181818, c_ltgray, 0.10, pm.alpha,
+				function(){
+					if (mouse_check_button(mb_left) && Settings.maxParticlesOnScreen > 5) {
+						Settings.maxParticlesOnScreen -= 5;
+						
+						saveSettings();
+					}
+					window_set_cursor(cr_handpoint);
+				}, BUTTON_ORIGIN.MiddleCenter
+			);
+			
+			button_gui(
+				xx + sliderOffset2, top + 3 * buttonSep, buttonHeight, buttonHeight,
+				">>", true, $181818, c_ltgray, 0.10, pm.alpha,
+				function(){
+					if (mouse_check_button(mb_left) && Settings.maxParticlesOnScreen < 4995) {
+						Settings.maxParticlesOnScreen += 5;
+						
+						saveSettings();
+					}
+					window_set_cursor(cr_handpoint);
+				}, BUTTON_ORIGIN.MiddleCenter
+			);
 			
 			
+			draw_set_halign(fa_left);
+			draw_set_valign(fa_top);
 			
 			
 			break;
 		
 	}
-	
 	
 	draw_set_alpha(1);
 }

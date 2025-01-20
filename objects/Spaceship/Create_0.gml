@@ -80,6 +80,7 @@ handleMovement = function() {
 		var xx = x - lengthdir_x(offset, direction) + irandom_range(-range, range);
 		var yy = y - lengthdir_y(offset, direction) + irandom_range(-range, range);
 		
+		// Fire Particles
 		repeat (opt(10, fps)) {
 			with (instance_create_layer(round(xx), round(yy), "Glowing_Particles", Particle)) {
 				self.sprite_index = sPixel_particle;
@@ -99,7 +100,10 @@ handleMovement = function() {
 				
 				self.step = irandom_range(10, 20);
 				
-				self.color = [choose(c_orange, c_orange, c_red), black, random_range(0.01, 0.05)];
+				var colorArray = ItemData[other.propellerID].components.flameColor;
+				var colorIndex = irandom(array_length(colorArray)-1);
+				
+				self.color = [colorArray[colorIndex], black, random_range(0.01, 0.05)];
 				self.destroyTime = (irandom(2) + 1) * 30;
 				self.scale = 1;
 				
@@ -193,7 +197,7 @@ tipAlpha = 0;
 // Inventory
 inventory = [];
 
-repeat (SpaceshipData[inventoryID].components.capacity) {
+repeat (ItemData[inventoryID].components.capacity) {
 	array_push(inventory, {
 		itemID: -1,
 		amount: 0,
@@ -397,6 +401,57 @@ drawMenu = function() {
 			);
 			
 			
+			// Draw every inventory slot
+			selectedSlot = -1;
+			var itemName = "empty";			
+			var itemSpr = -1;			
+
+			for (var i = 0; i < array_length(inventory) - 1; i++) {
+				var maxRows = 7;
+				var slotSize = 48;
+				var slotPadding = slotSize * 1.25;
+				
+				var yIndent = i div maxRows;
+				
+				var slotX = (((xx + i * (slotPadding)) - maxRows / 2 * slotSize) - (yIndent * maxRows) * slotPadding) - slotSize / 4;
+				var slotY = (top + 18 + slotSize) + (yIndent * (slotPadding));
+				
+				if (i % 5 == true) {
+					yIndent ++;
+				}
+				
+				ii = i;
+				
+				var itemID = inventory[i].itemID;
+				
+				if (itemID != -1) {
+					itemName = ItemData[itemID].name;
+					itemSpr = ItemData[itemID].sprite;
+					
+					if (itemSpr != -1) {
+						var sprScale = 1;
+						draw_sprite_ext(itemSpr, -1, slotX, slotY, sprScale, sprScale, 0, c_white, 1);
+					}
+				}
+				
+				
+				button_gui(slotX, slotY, slotSize, slotSize, "", true, $181818, c_ltgray, 0.1, menuAlpha, function(){
+					
+					selectedSlot = ii;
+					
+					window_set_cursor(cr_handpoint);
+					
+				}, BUTTON_ORIGIN.MiddleCenter);
+				
+			}
+			
+			if (selectedSlot != -1) {
+				draw_text(
+					window_mouse_get_x() + 20,
+					window_mouse_get_y() - 10,
+					itemName
+				);
+			}
 			
 			break;
 		
@@ -407,10 +462,5 @@ drawMenu = function() {
 	draw_set_alpha(1);
 	
 }
-
-
-
-
-
 
 

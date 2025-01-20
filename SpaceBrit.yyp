@@ -70,6 +70,7 @@
     {"id":{"name":"fovy","path":"scripts/fovy/fovy.yy",},},
     {"id":{"name":"get_player","path":"scripts/get_player/get_player.yy",},},
     {"id":{"name":"item_data","path":"scripts/item_data/item_data.yy",},},
+    {"id":{"name":"load_enums","path":"scripts/load_enums/load_enums.yy",},},
     {"id":{"name":"particle_movePixel","path":"scripts/particle_movePixel/particle_movePixel.yy",},},
     {"id":{"name":"set_pause","path":"scripts/set_pause/set_pause.yy",},},
     {"id":{"name":"settings","path":"scripts/settings/settings.yy",},},
