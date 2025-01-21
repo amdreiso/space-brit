@@ -390,6 +390,8 @@ drawMenu = function() {
 			var buttonX = (xx - ww / 2) + buttonOffsetX + buttonSize / 2;
 			var buttonY = modelY + 100;
 			
+			draw_set_alpha(menuAlpha);
+			
 			button_gui(
 				buttonX, buttonY, buttonSize, buttonSize, "",
 				true, $FF181818, c_ltgray, 0.10, menuAlpha,
@@ -404,12 +406,10 @@ drawMenu = function() {
 			);
 			
 			
-			
 			draw_set_halign(fa_left);
 			draw_set_valign(fa_middle);
 			
 			draw_text_color(buttonX + buttonSize, buttonY, "placeholder for item's name", c_white, c_white, c_white, c_white, menuAlpha);
-			
 			
 			
 			draw_set_halign(fa_center);
@@ -461,14 +461,13 @@ drawMenu = function() {
 					
 					if (itemSpr != -1) {
 						var sprScale = 1.5;
-						draw_sprite_ext(itemSpr, -1, slotX, slotY, sprScale, sprScale, 0, c_white, 1);
+						draw_sprite_ext(itemSpr, -1, slotX, slotY, sprScale, sprScale, 0, c_white, menuAlpha);
 					}
 				}
 				
 				if (selectedSlot != -1 && inventory[selectedSlot].itemID != -1) {
 					itemName = ItemData[? inventory[selectedSlot].itemID].name;
 				}
-				
 				
 				button_gui(slotX, slotY, slotSize, slotSize, "", true, $181818, c_ltgray, 0.1, menuAlpha, function(){
 					

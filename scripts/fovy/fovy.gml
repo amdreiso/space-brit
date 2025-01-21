@@ -151,15 +151,17 @@ function button_gui(
 			
 			// Draw outline
 			if (hasOutline) {
+				draw_set_alpha(alpha);
 				draw_rectangle_color(
 					x - width / 2, y - height / 2, 
 					x + width / 2, y + height / 2, 
 					outlineColor, outlineColor, outlineColor, outlineColor, true
 				);
+				draw_set_alpha(1);
 			}
 			
 			if (range) {
-				draw_set_alpha(hoverAlpha);
+				draw_set_alpha(hoverAlpha * alpha);
 				draw_rectangle_color(
 					x - width / 2, y - height / 2, 
 					x + width / 2, y + height / 2, 
@@ -173,7 +175,9 @@ function button_gui(
 			draw_set_halign(fa_center);
 			draw_set_valign(fa_middle);
 			
+			draw_set_alpha(alpha);
 			draw_text(x, y, label);
+				draw_set_alpha(1);
 			
 			draw_set_halign(fa_left);
 			draw_set_valign(fa_top);
