@@ -117,7 +117,7 @@ handleMovement = function() {
 			propellantSound = sound3D(emitter, xx, yy, snd_propellant, false, 0, 1);
 		}
 		
-		audio_sound_gain(propellantSound, 0.03 * Settings.volume.effects, 300);
+		audio_sound_gain(propellantSound, 0.03 * Settings.volume.effects * Settings.volume.master, 300);
 		audio_emitter_position(emitter, xx, yy, 0);
 		
 	} else {
@@ -141,6 +141,8 @@ handleAttack = function() {
 	if (busy) return;
 	
 	if (keyboard_check_pressed(vk_space) && shootingCooldown == 0) {
+		var turret = ItemData[? turretID];
+		
 		var spaceBetween = 4;
 		
 		var offset_x = lengthdir_x(spaceBetween, direction + 90);
@@ -162,11 +164,12 @@ handleAttack = function() {
 		camera_shake(0.75);
 		shootingCooldown = 10;
 		
-		audio_play_sound(snd_shoot, 0, false, 0.10, 0);
+		audio_play_sound(snd_shoot, 0, false, 0.10 * get_volume(AUDIO.Effects), 0);
 		
 		// Recoil
-		force.x -= lengthdir_x(0.3, mouseAngle);
-		force.y -= lengthdir_y(0.3, mouseAngle);
+		var recoil = turret.components.recoil;
+		force.x -= lengthdir_x(recoil, mouseAngle);
+		force.y -= lengthdir_y(recoil, mouseAngle);
 	}
 
 	if (shootingCooldown > 0) shootingCooldown -= GameSpeed;
@@ -214,7 +217,6 @@ repeat (ItemData[? inventoryID].components.capacity) {
 }
 
 inventoryAdd = function(itemID) {
-	
 	for (var i = 0; i < array_length(inventory) - 1; i++) {
 		var slot = inventory[i];
 		
@@ -232,9 +234,11 @@ inventoryAdd = function(itemID) {
 			
 		}
 	}
-	
 }
 
+inventoryButtonClick = function() {
+	audio_play_sound(snd_select, 0, false, get_volume(AUDIO.Effects), 0, random_range(0.95, 1.00));
+}
 
 
 // Draw
@@ -271,6 +275,9 @@ menuLastItem = -1;
 menuSize = new dim(500, 600);
 
 drawMenu = function() {
+	if (keyboard_check_pressed(ord("E")) && !Paused) {
+		menu = !menu;
+	}
 	
 	if (menu) {
 		menuAlpha = lerp(menuAlpha, 1, 0.25);
@@ -278,9 +285,15 @@ drawMenu = function() {
 		menuAlpha = lerp(menuAlpha, 0, 0.25);
 	}
 	
-	if (menuAlpha < 0.05) return false;
 	
-	if (keyboard_check_pressed(vk_escape)) menu = false;
+	if (menuAlpha < 0.05) {
+		menuPage = SPACESHIP_MENU_PAGE.Home;
+		return;
+	}
+	
+	if (keyboard_check_pressed(vk_escape)) {
+		menu = false;
+	}
 	
 	// Draw menu
 	var c0 = $FF080808, c1 = $FF181818;
@@ -336,6 +349,8 @@ drawMenu = function() {
 					
 					if (mouse_check_button_pressed(mb_left)) {
 						menuPage = SPACESHIP_MENU_PAGE.Build;
+						
+						inventoryButtonClick();
 					}
 					
 					window_set_cursor(cr_handpoint);
@@ -350,6 +365,8 @@ drawMenu = function() {
 					
 					if (mouse_check_button_pressed(mb_left)) {
 						menuPage = SPACESHIP_MENU_PAGE.Inventory;
+						
+						inventoryButtonClick();
 					}
 					
 					window_set_cursor(cr_handpoint);
@@ -368,6 +385,8 @@ drawMenu = function() {
 					
 					if (mouse_check_button_pressed(mb_left)) {
 						menuPage = SPACESHIP_MENU_PAGE.Home;
+						
+						inventoryButtonClick();
 					}
 					
 					window_set_cursor(cr_handpoint);
@@ -398,6 +417,7 @@ drawMenu = function() {
 				function(){
 					
 					if (mouse_check_button_pressed(mb_left)) {
+						inventoryButtonClick();
 					}
 					
 					window_set_cursor(cr_handpoint);
@@ -425,6 +445,8 @@ drawMenu = function() {
 					
 					if (mouse_check_button_pressed(mb_left)) {
 						menuPage = SPACESHIP_MENU_PAGE.Home;
+						
+						inventoryButtonClick();
 					}
 					
 					window_set_cursor(cr_handpoint);
@@ -587,7 +609,7 @@ drawMenu = function() {
 				
 				if (inventory[i].amount > 1) {
 					var d = 3.5;
-					draw_text(slotX + slotSize / d, slotY + slotSize / d, inventory[i].amount);
+					draw_text_color(slotX + slotSize / d, slotY + slotSize / d, inventory[i].amount, c_white, c_white, c_white, c_white, menuAlpha);
 				}
 			}
 			

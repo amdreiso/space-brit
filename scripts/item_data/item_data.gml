@@ -22,6 +22,8 @@ function item_data(){
 					
 					sprite: sTurret,
 					spriteCooldown: sTurretCooldown,
+					
+					recoil: 0.3,
 				}
 				
 				break;

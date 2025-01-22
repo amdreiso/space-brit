@@ -2,10 +2,6 @@
 
 
 // Menu
-if (keyboard_check_pressed(ord("E")) && !Paused) {
-	menu = !menu;
-}
-
 drawMenu();
 
 

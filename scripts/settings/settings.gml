@@ -12,7 +12,7 @@ function settings(){
 		
 		// Instances
 		maxParticlesOnScreen = 1000;
-		glowEffect = true;
+		glowEffect = false;
 	}
 	
 	
@@ -26,7 +26,6 @@ function settings(){
 	}
 	
 	
-	// Apply changes
+	// Apply changes after load
 	layer_enable_fx("Glowing_Particles", Settings.glowEffect);
-	
 }

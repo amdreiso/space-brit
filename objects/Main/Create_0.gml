@@ -45,7 +45,7 @@ audio_listener_orientation(0, 1, 0, 0, 0, 1);
 
 // Gameplay
 player = instance_create_layer(0, 0, "Spaceship", Spaceship);
-instance_create_layer(0, 0, "Spaceship", Music);
+instance_create_layer(0, 0, "Spaceship", MusicHandler);
 instance_create_layer(0, 0, "Spaceship", OuterSpace);
 instance_create_layer(0, 0, "Spaceship", PlanetHandler);
 instance_create_layer(0, 0, "Spaceship", CursorHandler);
@@ -104,6 +104,7 @@ repeat (50) {
 enum PM_PAGE {
 	Home,
 	Settings,
+	AudioSettings,
 }
 
 pm = {
@@ -123,6 +124,7 @@ pm = {
 saveSettings = function() {
 	save_id(SETTINGS_SF, Settings, true);
 }
+
 
 
 // For testing

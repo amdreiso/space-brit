@@ -15,5 +15,11 @@ enum ITEM {
 	Iron,
 	Coal,
 }
-	
+
+enum AUDIO {
+	Master,
+	Music,
+	Effects,
+}
+
 }
