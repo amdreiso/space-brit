@@ -93,6 +93,7 @@
     {"id":{"name":"snd_shoot","path":"sounds/snd_shoot/snd_shoot.yy",},},
     {"id":{"name":"snd_theme1","path":"sounds/snd_theme1/snd_theme1.yy",},},
     {"id":{"name":"sCoal","path":"sprites/sCoal/sCoal.yy",},},
+    {"id":{"name":"sIronIngot","path":"sprites/sIronIngot/sIronIngot.yy",},},
     {"id":{"name":"sPixel_particle","path":"sprites/sPixel_particle/sPixel_particle.yy",},},
     {"id":{"name":"sPlanet1","path":"sprites/sPlanet1/sPlanet1.yy",},},
     {"id":{"name":"sPlanet2","path":"sprites/sPlanet2/sPlanet2.yy",},},

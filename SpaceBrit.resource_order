@@ -54,6 +54,7 @@
     {"name":"snd_ambience6","order":5,"path":"sounds/snd_ambience6/snd_ambience6.yy",},
     {"name":"snd_select","order":1,"path":"sounds/snd_select/snd_select.yy",},
     {"name":"snd_shoot","order":2,"path":"sounds/snd_shoot/snd_shoot.yy",},
+    {"name":"sIronIngot","order":2,"path":"sprites/sIronIngot/sIronIngot.yy",},
     {"name":"sPlanet2","order":1,"path":"sprites/sPlanet2/sPlanet2.yy",},
     {"name":"sPlayerMove","order":1,"path":"sprites/sPlayerMove/sPlayerMove.yy",},
     {"name":"sRawIron","order":1,"path":"sprites/sRawIron/sRawIron.yy",},
