@@ -614,9 +614,19 @@ drawMenu = function() {
 			}
 			
 			if (selectedSlot != -1 && inventoryGrab.itemID == -1) {
+				var offset = new vec2(20, -10);
+				var shadowOffset = new vec2(-1.5, 1.5);
+				
+				draw_text_color(
+					window_mouse_get_x() + offset.x + shadowOffset.x,
+					window_mouse_get_y() + offset.y + shadowOffset.y,
+					itemName,
+					c_black, c_black, c_black, c_black, 1
+				);
+				
 				draw_text(
-					window_mouse_get_x() + 20,
-					window_mouse_get_y() - 10,
+					window_mouse_get_x() + offset.x,
+					window_mouse_get_y() + offset.y,
 					itemName
 				);
 			}
