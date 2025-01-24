@@ -1,10 +1,12 @@
 function load_enums(){
 	
 enum ITEM_TYPE {
-	Normal,
+	Blank,
 	Propeller,
 	Turret,
 	Inventory,
+	Food,
+	LightSource
 }
 
 enum ITEM {

@@ -16,6 +16,7 @@
     {"name":"Data","order":4,"path":"folders/Scripts/Data.yy",},
     {"name":"Draw","order":3,"path":"folders/Scripts/Draw.yy",},
     {"name":"GUI","order":1,"path":"folders/Scripts/Draw/GUI.yy",},
+    {"name":"Items","order":12,"path":"folders/Scripts/Items.yy",},
     {"name":"Tips","order":1,"path":"folders/Scripts/Tips.yy",},
     {"name":"Shaders","order":6,"path":"folders/Shaders.yy",},
     {"name":"Sounds","order":3,"path":"folders/Sounds.yy",},

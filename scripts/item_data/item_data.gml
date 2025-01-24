@@ -47,6 +47,23 @@ function item_data(){
 				
 				break;
 			
+			case ITEM_TYPE.Food:
+				
+				self.components = {
+					nutrition: 0,
+				}
+				
+				break;
+			
+			case ITEM_TYPE.LightSource:
+				
+				self.components = {
+					range: 0,
+					color: c_white,
+				}
+				
+				break;
+			
 		}
 		
 		
@@ -64,12 +81,25 @@ function item_data(){
 	}
 	
 	
-	add(ITEM.BasicPropeller,		new item(ITEM_TYPE.Propeller,			"basic propeller",			-1,						{}));
-	add(ITEM.BasicTurret,				new item(ITEM_TYPE.Turret,				"basic turret",					-1,						{}));
-	add(ITEM.BasicInventory,		new item(ITEM_TYPE.Inventory,			"basic inventory",			-1,						{}));
+	// Propellers
+	add(ITEM.BasicPropeller,	new item(ITEM_TYPE.Propeller,			"basic propeller",			-1,						{}));
 	
-	add(ITEM.RawIron,						new item(ITEM_TYPE.Normal,				"iron ore",							sRawIron,			{}));
-	add(ITEM.Iron,							new item(ITEM_TYPE.Normal,				"iron ingot",						sIronIngot,		{}));
-	add(ITEM.Coal,							new item(ITEM_TYPE.Normal,				"coal",									sCoal,				{}));
+	// Turrets
+	add(ITEM.BasicTurret,			new item(ITEM_TYPE.Turret,				"basic turret",					-1,						{}));
 	
+	// Inventories
+	add(ITEM.BasicInventory,	new item(ITEM_TYPE.Inventory,			"basic inventory",			-1,						{}));
+	
+	// Blank items
+	add(ITEM.RawIron,
+	new item(ITEM_TYPE.Blank,				"iron ore",							sRawIron,			{}));
+	
+	add(ITEM.Iron,
+	new item(ITEM_TYPE.Blank,				"iron ingot",						sIronIngot,		{}));
+	
+	add(ITEM.Coal,
+	new item(ITEM_TYPE.Blank,				"coal",									sCoal,				{}));
+	
+	
+
 }
