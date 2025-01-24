@@ -24,7 +24,7 @@ turn = 0;
 turnForce = 10;
 angle = irandom(360);
 
-maxSpeed = 2.5;
+maxSpeed = 2.5 * 50;
 acceleration = 0.05;
 
 turnPrecision = 0.25;

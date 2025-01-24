@@ -50,6 +50,8 @@ instance_create_layer(0, 0, "Spaceship", OuterSpace);
 instance_create_layer(0, 0, "Spaceship", PlanetHandler);
 instance_create_layer(0, 0, "Spaceship", CursorHandler);
 
+instance_create_layer(irandom(room_width)/2, irandom(room_height)/2, "Solar_System", SolarSystem);
+
 
 repeat (50) {
 	var xx, yy;

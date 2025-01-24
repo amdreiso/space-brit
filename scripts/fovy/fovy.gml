@@ -249,28 +249,27 @@ function get_perlin_noise_1D(xx, range){
 
 // Code from Arend Peter Teaches
 function get_perlin_noise_2D(xx, yy, range, r = false){
-var chunkSize = 8;
-
+	var chunkSize = 128;
 	var noise = 0;
 
 	range = range div 2;
 
-	while(chunkSize > 0){
+	while (chunkSize > 0){
 	    var index_x = xx div chunkSize;
 	    var index_y = yy div chunkSize;
     
 	    var t_x = (xx % chunkSize) / chunkSize;
 	    var t_y = (yy % chunkSize) / chunkSize;
     
-	    var r_00 = random_seed(range,index_x,   index_y);
-	    var r_01 = random_seed(range,index_x,   index_y+1);
-	    var r_10 = random_seed(range,index_x+1, index_y);
-	    var r_11 = random_seed(range,index_x+1, index_y+1);
+	    var r_00 = random_seed(range, index_x,   index_y);
+	    var r_01 = random_seed(range, index_x,   index_y + 1);
+	    var r_10 = random_seed(range, index_x+1, index_y);
+	    var r_11 = random_seed(range, index_x+1, index_y + 1);
     
-			var r_0 = lerp(r_00,r_01,t_y);
-	    var r_1 = lerp(r_10,r_11,t_y);
+			var r_0 = lerp(r_00, r_01, t_y);
+	    var r_1 = lerp(r_10, r_11, t_y);
    
-	    noise += lerp(r_0,r_1,t_x);
+	    noise += lerp(r_0, r_1, t_x);
     
 	    chunkSize = chunkSize div 2;
 	    range = range div 2;
@@ -292,7 +291,7 @@ function random_seed(range){
 			num = argument[1];
 			break;
 		case 3:
-			num = argument[1] + argument[2] * 323232;
+			num = argument[1] + argument[2] * 12409172;
 			break;
 	}
 	

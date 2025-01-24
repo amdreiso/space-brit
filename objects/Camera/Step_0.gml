@@ -24,7 +24,7 @@ if (keyboard_check(vk_shift)) {
 	zoomValue = 0.5;
 }
 
-zoom += (mouse_wheel_down() && zoom < 10)			? zoomValue : 0;
+zoom += (mouse_wheel_down() && zoom < 50)			? zoomValue : 0;
 zoom -= (mouse_wheel_up() && zoom > 0)				? zoomValue : 0;
 
 zoomLerp = lerp(zoomLerp, zoom, 0.1);
