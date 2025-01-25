@@ -21,10 +21,10 @@ camera_set_view_pos(cam, x - (size.width * zoomLerp) / 2, y - (size.height * zoo
 var zoomValue = 0.1;
 
 if (keyboard_check(vk_shift)) {
-	zoomValue = 0.5;
+	zoomValue = 2.5;
 }
 
-zoom += (mouse_wheel_down() && zoom < 50)			? zoomValue : 0;
+zoom += (mouse_wheel_down())			? zoomValue : 0;
 zoom -= (mouse_wheel_up() && zoom > 0)				? zoomValue : 0;
 
 zoomLerp = lerp(zoomLerp, zoom, 0.1);

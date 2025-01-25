@@ -1,4 +1,5 @@
 
+// Check if player is USABLE
 busy = (Paused);
 
 
@@ -12,7 +13,6 @@ handleAttack();
 
 // Audio
 audio_listener_position(x, y, 0);
-
 
 
 if (keyboard_check(ord("F"))) {

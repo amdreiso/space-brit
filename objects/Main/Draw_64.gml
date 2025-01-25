@@ -14,37 +14,37 @@ if (Paused) {
 	draw_rectangle_color(0, 0, window_get_width(), window_get_height(), c_black, c_black, c_black, c_black, false);
 	draw_set_alpha(1);
 	
-	pm.width = lerp(pm.width, pm.setWidth, 0.25);
-	pm.height = lerp(pm.height, pm.setHeight, 0.25);
+	pauseMenu.width = lerp(pauseMenu.width, pauseMenu.setWidth, 0.25);
+	pauseMenu.height = lerp(pauseMenu.height, pauseMenu.setHeight, 0.25);
 	
-	pm.alpha = lerp(pm.alpha, 1, 0.25);
+	pauseMenu.alpha = lerp(pauseMenu.alpha, 1, 0.25);
 	
 } else {
 	
-	pm.alpha = lerp(pm.alpha, 0, 0.25);
+	pauseMenu.alpha = lerp(pauseMenu.alpha, 0, 0.25);
 	
 }
 
-if (pm.width > pmOffset && pm.height > pmOffset && pm.alpha > 0.05) {
-	draw_set_alpha(pm.alpha);
+if (pauseMenu.width > pmOffset && pauseMenu.height > pmOffset && pauseMenu.alpha > 0.05) {
+	draw_set_alpha(pauseMenu.alpha);
 	
-	rect(x0, y0, pm.width, pm.height, pm.backgroundColor, false);
-	rect(x0, y0, pm.width, pm.height, pm.outlineColor, true);
+	rect(x0, y0, pauseMenu.width, pauseMenu.height, pauseMenu.backgroundColor, false);
+	rect(x0, y0, pauseMenu.width, pauseMenu.height, pauseMenu.outlineColor, true);
 	
 	var xx = window_get_width() / 2;
 	var yy = window_get_height() / 2;
 	
-	var buttonWidth = pm.width / 1.5;
+	var buttonWidth = pauseMenu.width / 1.5;
 	var buttonHeight = 28;
 	var buttonSep = 28 * 1.25;
 	var checkboxSize = 22;
-	var sliderOffset = (pm.width / 2) - (buttonHeight * 2) - 2;
-	var sliderOffset2 = (pm.width / 2) - buttonHeight;
+	var sliderOffset = (pauseMenu.width / 2) - (buttonHeight * 2) - 2;
+	var sliderOffset2 = (pauseMenu.width / 2) - buttonHeight;
 	
-	var top = (yy - pm.height / 2) + 50;
+	var top = (yy - pauseMenu.height / 2) + 50;
 	
 	
-	switch (pm.page) {
+	switch (pauseMenu.page) {
 		
 		case PM_PAGE.Home:
 			
@@ -52,10 +52,10 @@ if (pm.width > pmOffset && pm.height > pmOffset && pm.alpha > 0.05) {
 	
 			button_gui(
 				xx, top + buttonSep, buttonWidth, buttonHeight,
-				"Settings", true, $181818, c_ltgray, 0.10, pm.alpha,
+				"Settings", true, $181818, c_ltgray, 0.10, pauseMenu.alpha,
 				function(){
 					if (mouse_check_button_pressed(mb_left)) {
-						pm.page = PM_PAGE.Settings;
+						pauseMenu.page = PM_PAGE.Settings;
 					}
 					window_set_cursor(cr_handpoint);
 				}, BUTTON_ORIGIN.MiddleCenter
@@ -63,7 +63,7 @@ if (pm.width > pmOffset && pm.height > pmOffset && pm.alpha > 0.05) {
 			
 			button_gui(
 				xx, top + 2 * buttonSep, buttonWidth, buttonHeight,
-				"Resume", true, $181818, c_ltgray, 0.10, pm.alpha,
+				"Resume", true, $181818, c_ltgray, 0.10, pauseMenu.alpha,
 				function(){
 					if (mouse_check_button_pressed(mb_left)) {
 						set_pause(false);
@@ -78,10 +78,10 @@ if (pm.width > pmOffset && pm.height > pmOffset && pm.alpha > 0.05) {
 			
 			button_gui(
 				xx, top, buttonWidth, buttonHeight,
-				"Go back", true, $181818, c_ltgray, 0.10, pm.alpha,
+				"Go back", true, $181818, c_ltgray, 0.10, pauseMenu.alpha,
 				function(){
 					if (mouse_check_button_pressed(mb_left)) {
-						pm.page = PM_PAGE.Home;
+						pauseMenu.page = PM_PAGE.Home;
 					}
 					window_set_cursor(cr_handpoint);
 				}, BUTTON_ORIGIN.MiddleCenter
@@ -98,9 +98,9 @@ if (pm.width > pmOffset && pm.height > pmOffset && pm.alpha > 0.05) {
 			// Audio settings
 			button_gui(
 				xx, top + 2 * buttonSep, buttonWidth, buttonHeight, "Audio Settings",
-				true, $181818, c_ltgray, 0.1, pm.alpha, function(){
+				true, $181818, c_ltgray, 0.1, pauseMenu.alpha, function(){
 					if (mouse_check_button_pressed(mb_left)) {
-						pm.page = PM_PAGE.AudioSettings;
+						pauseMenu.page = PM_PAGE.AudioSettings;
 					}
 					window_set_cursor(cr_handpoint);
 				}, BUTTON_ORIGIN.MiddleCenter
@@ -110,7 +110,7 @@ if (pm.width > pmOffset && pm.height > pmOffset && pm.alpha > 0.05) {
 			// GLOW EFFECT
 			button_gui(
 				x2, top + 3 * buttonSep, buttonWidth, buttonHeight,
-				"Toggle Glow Effect: "+string(layer_fx_is_enabled("Glowing_Particles")), true, $181818, c_ltgray, 0.10, pm.alpha,
+				"Toggle Glow Effect: "+string(layer_fx_is_enabled("Glowing_Particles")), true, $181818, c_ltgray, 0.10, pauseMenu.alpha,
 				function(){
 					if (mouse_check_button_pressed(mb_left)) {
 						var str = "Glowing_Particles";
@@ -138,7 +138,7 @@ if (pm.width > pmOffset && pm.height > pmOffset && pm.alpha > 0.05) {
 			
 			button_gui(
 				xx - sliderOffset, top + 4 * buttonSep, buttonHeight, buttonHeight,
-				"<", true, $181818, c_ltgray, 0.10, pm.alpha,
+				"<", true, $181818, c_ltgray, 0.10, pauseMenu.alpha,
 				function(){
 					if (mouse_check_button(mb_left) && Settings.maxParticlesOnScreen > 0) {
 						Settings.maxParticlesOnScreen --;
@@ -151,7 +151,7 @@ if (pm.width > pmOffset && pm.height > pmOffset && pm.alpha > 0.05) {
 			
 			button_gui(
 				xx + sliderOffset, top + 4 * buttonSep, buttonHeight, buttonHeight,
-				">", true, $181818, c_ltgray, 0.10, pm.alpha,
+				">", true, $181818, c_ltgray, 0.10, pauseMenu.alpha,
 				function(){
 					if (mouse_check_button(mb_left) && Settings.maxParticlesOnScreen < 5000) {
 						Settings.maxParticlesOnScreen ++;
@@ -164,7 +164,7 @@ if (pm.width > pmOffset && pm.height > pmOffset && pm.alpha > 0.05) {
 			
 			button_gui(
 				xx - sliderOffset2, top + 4 * buttonSep, buttonHeight, buttonHeight,
-				"<<", true, $181818, c_ltgray, 0.10, pm.alpha,
+				"<<", true, $181818, c_ltgray, 0.10, pauseMenu.alpha,
 				function(){
 					if (mouse_check_button(mb_left) && Settings.maxParticlesOnScreen > 5) {
 						Settings.maxParticlesOnScreen -= 5;
@@ -177,7 +177,7 @@ if (pm.width > pmOffset && pm.height > pmOffset && pm.alpha > 0.05) {
 			
 			button_gui(
 				xx + sliderOffset2, top + 4 * buttonSep, buttonHeight, buttonHeight,
-				">>", true, $181818, c_ltgray, 0.10, pm.alpha,
+				">>", true, $181818, c_ltgray, 0.10, pauseMenu.alpha,
 				function(){
 					if (mouse_check_button(mb_left) && Settings.maxParticlesOnScreen < 4995) {
 						Settings.maxParticlesOnScreen += 5;
@@ -204,10 +204,10 @@ if (pm.width > pmOffset && pm.height > pmOffset && pm.alpha > 0.05) {
 			
 			button_gui(
 				xx, top, buttonWidth, buttonHeight,
-				"Go back", true, $181818, c_ltgray, 0.10, pm.alpha,
+				"Go back", true, $181818, c_ltgray, 0.10, pauseMenu.alpha,
 				function(){
 					if (mouse_check_button_pressed(mb_left)) {
-						pm.page = PM_PAGE.Settings;
+						pauseMenu.page = PM_PAGE.Settings;
 					}
 					window_set_cursor(cr_handpoint);
 				}, BUTTON_ORIGIN.MiddleCenter
@@ -217,7 +217,7 @@ if (pm.width > pmOffset && pm.height > pmOffset && pm.alpha > 0.05) {
 			// Master
 			button_gui(
 				xx - sliderOffset, top + 2 * buttonSep, buttonHeight, buttonHeight,
-				"<", true, $181818, c_ltgray, 0.10, pm.alpha,
+				"<", true, $181818, c_ltgray, 0.10, pauseMenu.alpha,
 				function(){
 					if (mouse_check_button(mb_left) && Settings.volume.master > 0) {
 						Settings.volume.master -= 0.01;
@@ -230,7 +230,7 @@ if (pm.width > pmOffset && pm.height > pmOffset && pm.alpha > 0.05) {
 			
 			button_gui(
 				xx + sliderOffset, top + 2 * buttonSep, buttonHeight, buttonHeight,
-				">", true, $181818, c_ltgray, 0.10, pm.alpha,
+				">", true, $181818, c_ltgray, 0.10, pauseMenu.alpha,
 				function(){
 					if (mouse_check_button(mb_left) && Settings.volume.master < 1) {
 						Settings.volume.master += 0.01;
@@ -242,13 +242,13 @@ if (pm.width > pmOffset && pm.height > pmOffset && pm.alpha > 0.05) {
 			);
 			
 			draw_set_halign(fa_center);
-			draw_text_color(xx, top + 2 * buttonSep, "Master = "+string(Settings.volume.master * 100), c_white, c_white, c_white, c_white, pm.alpha);
+			draw_text_color(xx, top + 2 * buttonSep, "Master = "+string(Settings.volume.master * 100), c_white, c_white, c_white, c_white, pauseMenu.alpha);
 			
 			
 			// Music
 			button_gui(
 				xx - sliderOffset, top + 3 * buttonSep, buttonHeight, buttonHeight,
-				"<", true, $181818, c_ltgray, 0.10, pm.alpha,
+				"<", true, $181818, c_ltgray, 0.10, pauseMenu.alpha,
 				function(){
 					if (mouse_check_button(mb_left) && Settings.volume.music > 0) {
 						Settings.volume.music -= 0.01;
@@ -261,7 +261,7 @@ if (pm.width > pmOffset && pm.height > pmOffset && pm.alpha > 0.05) {
 			
 			button_gui(
 				xx + sliderOffset, top + 3 * buttonSep, buttonHeight, buttonHeight,
-				">", true, $181818, c_ltgray, 0.10, pm.alpha,
+				">", true, $181818, c_ltgray, 0.10, pauseMenu.alpha,
 				function(){
 					if (mouse_check_button(mb_left) && Settings.volume.music < 1) {
 						Settings.volume.music += 0.01;
@@ -274,13 +274,13 @@ if (pm.width > pmOffset && pm.height > pmOffset && pm.alpha > 0.05) {
 			
 			draw_set_halign(fa_center);
 			
-			draw_text_color(xx, top + 3 * buttonSep, "Music = "+string(Settings.volume.music * 100), c_white, c_white, c_white, c_white, pm.alpha);
+			draw_text_color(xx, top + 3 * buttonSep, "Music = "+string(Settings.volume.music * 100), c_white, c_white, c_white, c_white, pauseMenu.alpha);
 			
 			
 			// Effects
 			button_gui(
 				xx - sliderOffset, top + 4 * buttonSep, buttonHeight, buttonHeight,
-				"<", true, $181818, c_ltgray, 0.10, pm.alpha,
+				"<", true, $181818, c_ltgray, 0.10, pauseMenu.alpha,
 				function(){
 					if (mouse_check_button(mb_left) && Settings.volume.effects > 0.01) {
 						Settings.volume.effects -= 0.01;
@@ -293,7 +293,7 @@ if (pm.width > pmOffset && pm.height > pmOffset && pm.alpha > 0.05) {
 			
 			button_gui(
 				xx + sliderOffset, top + 4 * buttonSep, buttonHeight, buttonHeight,
-				">", true, $181818, c_ltgray, 0.10, pm.alpha,
+				">", true, $181818, c_ltgray, 0.10, pauseMenu.alpha,
 				function(){
 					if (mouse_check_button(mb_left) && Settings.volume.effects < 1) {
 						Settings.volume.effects += 0.01;
@@ -306,7 +306,7 @@ if (pm.width > pmOffset && pm.height > pmOffset && pm.alpha > 0.05) {
 			
 			draw_set_halign(fa_center);
 			
-			draw_text_color(xx, top + 4 * buttonSep, "SFX = "+string(Settings.volume.effects * 100), c_white, c_white, c_white, c_white, pm.alpha);
+			draw_text_color(xx, top + 4 * buttonSep, "SFX = "+string(Settings.volume.effects * 100), c_white, c_white, c_white, c_white, pauseMenu.alpha);
 			
 			draw_set_halign(fa_left);
 			

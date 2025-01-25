@@ -5,18 +5,10 @@ function item_data(){
 	globalvar ItemData;
 	ItemData = ds_map_create();
 	
-	var item = function(type, name, spr, componentVariables) constructor {
-		self.type = type;
-		self.name = name;
-		self.sprite = spr;
-		self.components = {};
-		
-		
-		switch ( self.type ) {
-			
+	itemDefaultComponents = function(type) {
+		switch ( type ) {
 			case ITEM_TYPE.Turret:
-				
-				self.components = {
+				return {
 					damage: 2,
 					shootCooldown: 10,
 					
@@ -26,48 +18,51 @@ function item_data(){
 					recoil: 0.3,
 				}
 				
-				break;
-			
 			case ITEM_TYPE.Propeller:
-				
-				self.components = {
+				return {
 					acceleration: 0.05,
 					fuelConsumption: 0.1,
 					
 					flameColor: [c_yellow, c_red],
 				}
 				
-				break;
-			
 			case ITEM_TYPE.Inventory:
-				
-				self.components = {
+				return {
 					capacity: 20,
 				}
 				
-				break;
-			
 			case ITEM_TYPE.Food:
-				
-				self.components = {
+				return {
 					nutrition: 0,
 				}
-				
-				break;
+			
+			case ITEM_TYPE.Fuel:
+				return {
+					fuel: 10,
+				}
 			
 			case ITEM_TYPE.LightSource:
-				
-				self.components = {
+				return {
 					range: 0,
 					color: c_white,
 				}
-				
-				break;
 			
+			default:
+				return {};
 		}
+	}
+	
+	
+	var item = function(type, name, spr, componentVariables) constructor {
+		self.type = type;
+		self.name = name;
+		self.sprite = spr;
+		self.components = other.itemDefaultComponents(self.type);
 		
 		
 		// Set components
+		if (componentVariables == undefined) return;
+		
 		var names = struct_get_names(componentVariables);
 		
 		for (var i = 0; i < array_length(names); i++) {
@@ -82,7 +77,7 @@ function item_data(){
 	
 	
 	// Propellers
-	add(ITEM.BasicPropeller,	new item(ITEM_TYPE.Propeller,			"basic propeller",			-1,						{}));
+	add(ITEM.BasicPropeller,	new item(ITEM_TYPE.Propeller,			"basic propeller",			-1));
 	
 	// Turrets
 	add(ITEM.BasicTurret,			new item(ITEM_TYPE.Turret,				"basic turret",					-1,						{}));
@@ -90,16 +85,18 @@ function item_data(){
 	// Inventories
 	add(ITEM.BasicInventory,	new item(ITEM_TYPE.Inventory,			"basic inventory",			-1,						{}));
 	
+	
 	// Blank items
 	add(ITEM.RawIron,
-	new item(ITEM_TYPE.Blank,				"iron ore",							sRawIron,			{}));
-	
+			new item(ITEM_TYPE.Blank,				"iron ore",							sRawIron,			{}));
+			
 	add(ITEM.Iron,
-	new item(ITEM_TYPE.Blank,				"iron ingot",						sIronIngot,		{}));
-	
+			new item(ITEM_TYPE.Blank,				"iron ingot",						sIronIngot,		{}));
+			
 	add(ITEM.Coal,
-	new item(ITEM_TYPE.Blank,				"coal",									sCoal,				{}));
+			new item(ITEM_TYPE.Fuel,				"coal",									sCoal,				{}));
 	
 	
-
+	print_ds_map(ItemData);
+	
 }

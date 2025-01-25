@@ -13,8 +13,6 @@ for (var i = 0; i < planetAmount; i++) {
 	
 	planetDistance += irandom_range(7000, 30000) + 1000;
 	
-	show_debug_message(planetDistance);
-	
 	with (planet) {
 		self.distanceToSun = other.planetDistance;
 		self.sun = other.sun;

@@ -22,14 +22,14 @@ item_data();
 globalvar GameSpeed; GameSpeed = 1;
 globalvar Paused; Paused = false;
 globalvar Debug; Debug = false;
-globalvar Seed; Seed = irandom(10000000);
+globalvar Seed; Seed = 2358327;
 globalvar StarGrid; StarGrid = ds_map_create();
 globalvar Stars; Stars = {
 	chunk: 128,
 }
 
 globalvar ParticleCount; ParticleCount = 0;
-
+ 
 
 // Audio
 globalvar Sound; Sound = {};
@@ -109,7 +109,7 @@ enum PM_PAGE {
 	AudioSettings,
 }
 
-pm = {
+pauseMenu = {
 	page: PM_PAGE.Home,
 	
 	width: 500,
@@ -131,7 +131,6 @@ saveSettings = function() {
 
 // For testing
 Debug = false;
-
 
 
 

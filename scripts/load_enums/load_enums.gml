@@ -6,7 +6,7 @@ enum ITEM_TYPE {
 	Turret,
 	Inventory,
 	Food,
-	LightSource
+	Fuel,
 }
 
 enum ITEM {

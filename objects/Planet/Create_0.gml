@@ -8,7 +8,7 @@ scale = get_perlin_noise_2D(x, y, 6) + 2;
 sun = -1;
 distanceToSun = 0;
 
-orbitSpeed = 0.0002;
+orbitSpeed = 199.0002;
 
 setAngle = false;
 angle = irandom(360);
@@ -16,7 +16,7 @@ angle = irandom(360);
 orbit = function() {
 	if (sun == -1) return;
 	
-	angle += orbitSpeed / (distanceToSun / 5);
+	angle += (orbitSpeed / (distanceToSun / 5)) * GameSpeed;
 	
 	if (angle >= 360) {
 		angle = 0;

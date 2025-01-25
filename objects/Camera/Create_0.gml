@@ -16,7 +16,7 @@ size = defaultSize;
 angle = 0;
 followSpeed = 0.1;
 
-zoom = 1;
+zoom = 100;
 zoomLerp = zoom;
 
 shakeValue = 0;

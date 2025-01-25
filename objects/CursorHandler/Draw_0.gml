@@ -8,6 +8,12 @@ var player = get_player();
 var xx = player.x;
 var yy = player.y;
 
-button(xx, yy, 1000, 1000, "", false, c_black, c_black, 0, function(){
+var size = 1;
+
+if (instance_exists(Camera)) {
+	size = Camera.size.width * Camera.zoom;
+}
+
+button(xx, yy, size, size, "", false, c_black, c_black, 0, function(){
 	window_set_cursor(cr_default);
 }, BUTTON_ORIGIN.MiddleCenter);
