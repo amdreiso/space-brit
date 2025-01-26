@@ -110,7 +110,7 @@ if (pauseMenu.width > pmOffset && pauseMenu.height > pmOffset && pauseMenu.alpha
 			// GLOW EFFECT
 			button_gui(
 				x2, top + 3 * buttonSep, buttonWidth, buttonHeight,
-				"Toggle Glow Effect: "+string(layer_fx_is_enabled("Glowing_Particles")), true, $181818, c_ltgray, 0.10, pauseMenu.alpha,
+				"Toggle Glow Effect: "+str_bool(layer_fx_is_enabled("Glowing_Particles")), true, $181818, c_ltgray, 0.10, pauseMenu.alpha,
 				function(){
 					if (mouse_check_button_pressed(mb_left)) {
 						var str = "Glowing_Particles";

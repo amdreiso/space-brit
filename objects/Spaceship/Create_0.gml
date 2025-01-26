@@ -11,6 +11,7 @@ hp = 1000;
 propellerID					= ITEM.BasicPropeller;
 turretID						= ITEM.BasicTurret;
 inventoryID					= ITEM.BasicInventory;
+radarID							= ITEM.BasicRadar;
 
 
 // Movement
@@ -24,7 +25,7 @@ turn = 0;
 turnForce = 10;
 angle = irandom(360);
 
-maxSpeed = 2.5 * 50;
+maxSpeed = 2.5 * 100;
 acceleration = 0.05;
 
 turnPrecision = 0.25;
@@ -33,6 +34,11 @@ turnSpeed = 0.2;
 mouseAngle = 0;
 
 fuel = 1;
+
+
+distanceToSun = 0;
+distanceToSunOffset = 0;
+inSunRadius = false;
 
 
 handleMovement = function() {
@@ -268,6 +274,8 @@ enum SPACESHIP_MENU_PAGE {
 	Home,
 	Build,
 	Inventory,
+	Health,
+	Settings,
 }
 
 menu = false;
@@ -278,6 +286,30 @@ menuModelThetaForce = 0;
 menuLastItem = -1;
 
 menuSize = new dim(500, 600);
+
+menuSettings = {
+	sunProximityAlert: true,
+}
+
+
+menuDrawReturnButton = function(x, y, width) {
+	button_gui(
+		x, y, width / 1.5, 28, "Return",
+		true, $FF181818, c_ltgray, 0.10, menuAlpha,
+		function(){
+					
+			if (mouse_check_button_pressed(mb_left)) {
+				menuPage = SPACESHIP_MENU_PAGE.Home;
+						
+				inventoryButtonClick();
+			}
+					
+			window_set_cursor(cr_handpoint);
+					
+		}, BUTTON_ORIGIN.MiddleCenter
+	);
+}
+
 
 drawMenu = function() {
 	if (keyboard_check_pressed(ord("E")) && !Paused) {
@@ -379,17 +411,13 @@ drawMenu = function() {
 				}, BUTTON_ORIGIN.MiddleCenter
 			);
 			
-			break;
-		
-		case SPACESHIP_MENU_PAGE.Build:
-			
 			button_gui(
-				xx, top + 14, ww / 1.5, 28, "Go Back",
+				xx, buttonY + 2 * buttonSep, ww/1.5, buttonHeight, "Health",
 				true, $FF181818, c_ltgray, 0.10, menuAlpha,
 				function(){
 					
 					if (mouse_check_button_pressed(mb_left)) {
-						menuPage = SPACESHIP_MENU_PAGE.Home;
+						menuPage = SPACESHIP_MENU_PAGE.Health;
 						
 						inventoryButtonClick();
 					}
@@ -398,6 +426,96 @@ drawMenu = function() {
 					
 				}, BUTTON_ORIGIN.MiddleCenter
 			);
+			
+			button_gui(
+				xx, buttonY + 3 * buttonSep, ww/1.5, buttonHeight, "Settings",
+				true, $FF181818, c_ltgray, 0.10, menuAlpha,
+				function(){
+					
+					if (mouse_check_button_pressed(mb_left)) {
+						menuPage = SPACESHIP_MENU_PAGE.Settings;
+						
+						inventoryButtonClick();
+					}
+					
+					window_set_cursor(cr_handpoint);
+					
+				}, BUTTON_ORIGIN.MiddleCenter
+			);
+			
+			
+			
+			// Draw radar
+			var radar = ItemData[? radarID];
+			var radarSize = 1.25;
+			var radarX = xx;
+			var radarY = yy + menuSize.height / 4;
+			var radarRadius = radar.components.radius;
+			
+			draw_sprite_ext(radar.components.sprite, 0, radarX, radarY, radarSize, radarSize, 0, c_white, menuAlpha);
+			
+			// Draw dots
+			for (var i = 0; i < array_length(radar.components.track); i++) {
+				
+				// Iterate through every object in the track array and draw them on the radar
+				for (var j = 0; j < instance_number(radar.components.track[i]); j++) {
+					var inst = instance_find(radar.components.track[i], j);
+					var distance = distance_to_object(inst);
+					
+					// hardcoded garbage. works tho
+					if (distance < (15500) * (radarRadius / (200))) {
+						var divider = sprite_get_width(radar.components.sprite) * radarSize;
+						var pos = new vec2(
+							inst.x / radarRadius - x / radarRadius,
+							inst.y / radarRadius - y / radarRadius
+						);
+						
+						var color = c_lime;
+						
+						draw_set_alpha(menuAlpha);
+						
+						draw_circle_color(
+							radarX + pos.x, radarY + pos.y, 3,
+							color, color, false
+						);
+						
+					}
+					
+				}
+				
+			}
+			
+			draw_circle_color(
+				radarX, radarY, 2,
+				c_white, c_white, false
+			);
+			
+			draw_set_alpha(1);
+			
+			/*
+			
+			for (var j = 0; j < instance_number(MinionHut); j++) {
+				var obj = instance_find(MinionHut, j);
+		
+				if (distance_to_object(obj) < mapDrawDistance) {
+					var objX = obj.x/mapAmp - x/mapAmp;
+					var objY = obj.y/mapAmp - y/mapAmp;
+			
+					circle_button(mapPlayerX+objX, mapPlayerY+objY, 5, c2, c4, function(){
+						draw_set_halign(fa_left);
+						draw_text_transformed_color(mouse_x+20, mouse_y, "Shrine", .25, .25, 0, c1, c2, c3, c4, 1);
+						draw_set_halign(fa_center);
+					});
+				}
+			}
+			
+			*/
+			
+			break;
+		
+		case SPACESHIP_MENU_PAGE.Build:
+			
+			menuDrawReturnButton(xx, top + 14, ww);
 			
 			
 			var modelScale = 5;
@@ -443,21 +561,7 @@ drawMenu = function() {
 		
 		case SPACESHIP_MENU_PAGE.Inventory:
 			
-			button_gui(
-				xx, top + 14, ww / 1.5, 28, "Go Back",
-				true, $FF181818, c_ltgray, 0.10, menuAlpha,
-				function(){
-					
-					if (mouse_check_button_pressed(mb_left)) {
-						menuPage = SPACESHIP_MENU_PAGE.Home;
-						
-						inventoryButtonClick();
-					}
-					
-					window_set_cursor(cr_handpoint);
-					
-				}, BUTTON_ORIGIN.MiddleCenter
-			);
+			menuDrawReturnButton(xx, top + 14, ww);
 			
 			
 			// Draw every inventory slot
@@ -646,9 +750,86 @@ drawMenu = function() {
 			
 			break;
 		
+		case SPACESHIP_MENU_PAGE.Health:
+			
+			menuDrawReturnButton(xx, top + 14, ww);
+			
+			break;
+		
+		case SPACESHIP_MENU_PAGE.Settings:
+			
+			menuDrawReturnButton(xx, top + 14, ww);
+			
+			// Draw options
+			
+			var sttButtonHeight = 28;
+			var sttButtonY = top + 18 + sttButtonHeight * 1.5;
+			
+			button_gui(xx, sttButtonY, menuSize.width / 1.5, sttButtonHeight, "Sun Prox. Alert: "+str_bool(menuSettings.sunProximityAlert), true, $181818, c_ltgray, 0.25, menuAlpha, function(){
+				if (mouse_check_button_pressed(mb_left)) {
+					menuSettings.sunProximityAlert = !menuSettings.sunProximityAlert;
+				}
+				
+				window_set_cursor(cr_handpoint);
+			}, BUTTON_ORIGIN.MiddleCenter);
+			
+			break;
+		
 	}
 	
 	draw_set_alpha(1);
 }
+
+
+
+// Doodles
+// to show important stuff on the players hud
+// if they're too close to the sun for example
+
+doodles = [
+	{
+		description: "Careful, you're flying to close to the sun!",
+		sprite: sDanger,
+		fn: function() {
+			return Spaceship.inSunRadius;
+		}
+	},
+];
+
+selectedDoodle = 0;
+doodleButtonSize = 32;
+doodleButtonPadding = 1.25;
+
+drawDoodles = function() {
+	
+	for (var i = 0; i < array_length(doodles); i++) {
+		var windowOffset = 32;
+		var xx = (window_get_width() - windowOffset) - i * (doodleButtonSize * doodleButtonPadding);
+		var yy = window_get_height() - windowOffset;
+		var size = doodleButtonSize;
+		
+		selectedDoodle = doodles[i];
+		
+		if (selectedDoodle.fn()) {
+			button_gui(xx, yy, size, size, "", false, 0, 0, 0, 1, function(){
+				
+				draw_set_halign(fa_right);
+				draw_set_valign(fa_bottom);
+				
+				draw_text_ext(W_MOUSE.x, W_MOUSE.y - 20, selectedDoodle.description, 14, 200);
+				
+				draw_set_halign(fa_center);
+				draw_set_valign(fa_middle);
+				
+			}, BUTTON_ORIGIN.MiddleCenter);
+		
+			draw_sprite(selectedDoodle.sprite, 0, xx, yy);
+		}
+		
+	}
+	
+}
+
+
 
 

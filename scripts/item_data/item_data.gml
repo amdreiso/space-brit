@@ -31,6 +31,14 @@ function item_data(){
 					capacity: 20,
 				}
 				
+			case ITEM_TYPE.Radar:
+				return {
+					sprite: sBasicRadarMenu,
+					
+					radius: 200,
+					track: [],
+				}
+				
 			case ITEM_TYPE.Food:
 				return {
 					nutrition: 0,
@@ -78,6 +86,13 @@ function item_data(){
 	
 	// Inventories
 	add(ITEM.BasicInventory,	new item(ITEM_TYPE.Inventory,			"basic inventory",			-1,						{}));
+	
+	// Radars
+	add(ITEM.BasicRadar,	new item(ITEM_TYPE.Radar,							"basic Radar",					-1,
+	{
+		track: [Planet, Sun],
+		radius: 200,
+	}));
 	
 	
 	// Blank items
