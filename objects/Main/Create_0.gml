@@ -44,7 +44,7 @@ audio_listener_orientation(0, 1, 0, 0, 0, 1);
 
 
 // Gameplay
-player = instance_create_layer(0, 0, "Spaceship", Spaceship);
+player = instance_create_layer(10000, 13000, "Spaceship", Spaceship);
 instance_create_layer(0, 0, "Spaceship", MusicHandler);
 instance_create_layer(0, 0, "Spaceship", OuterSpace);
 instance_create_layer(0, 0, "Spaceship", PlanetHandler);

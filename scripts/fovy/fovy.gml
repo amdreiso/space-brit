@@ -283,6 +283,7 @@ function get_perlin_noise_2D(xx, yy, range, r = false){
 	return noise;
 }
 
+// Code from Arend Peter Teaches
 function random_seed(range){
 	var num = 0;
 	

@@ -8,7 +8,7 @@ scale = get_perlin_noise_2D(x, y, 6) + 2;
 sun = -1;
 distanceToSun = 0;
 
-orbitSpeed = 199.0002;
+orbitSpeed = 0.0002;
 
 setAngle = false;
 angle = irandom(360);
@@ -31,8 +31,6 @@ orbit = function() {
 	}
 }
 
-show_debug_message(angle);
-
 
 // Planet variables
 components = {
@@ -46,4 +44,11 @@ components = {
 	}
 }
 
+color = {
+	red:		random(1.00),
+	green:	random(1.00),
+	blue:		random(1.00),
+}
 
+show_debug_message(components.resources);
+show_debug_message(color);

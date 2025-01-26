@@ -197,6 +197,11 @@ propellantSound = -1;
 tipAlpha = 0;
 
 
+// GUI
+sunAlpha = 0;
+beepInterval = 0;
+
+
 // Inventory
 inventorySlot = function(_itemID, _amount) {
 	return {

@@ -41,12 +41,6 @@ function item_data(){
 					fuel: 10,
 				}
 			
-			case ITEM_TYPE.LightSource:
-				return {
-					range: 0,
-					color: c_white,
-				}
-			
 			default:
 				return {};
 		}
@@ -98,5 +92,4 @@ function item_data(){
 	
 	
 	print_ds_map(ItemData);
-	
 }
