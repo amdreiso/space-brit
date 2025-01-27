@@ -11,7 +11,7 @@
   "isDnd":false,
   "layers":[
     {"$GMREffectLayer":"","%Name":"Noise","depth":0,"effectEnabled":true,"effectType":"_filter_rgbnoise","gridX":32,"gridY":32,"hierarchyFrozen":false,"inheritLayerDepth":false,"inheritLayerSettings":false,"inheritSubLayers":true,"inheritVisibility":true,"layers":[],"name":"Noise","properties":[
-        {"name":"g_RGBNoiseIntensity","type":0,"value":"0.05",},
+        {"name":"g_RGBNoiseIntensity","type":0,"value":"0.001",},
         {"name":"g_RGBNoiseAnimation","type":0,"value":"0.2",},
         {"name":"g_RGBNoiseColour","type":1,"value":"#FFFFFFFF",},
         {"name":"g_RGBNoiseTexture","type":2,"value":"_filter_rgbnoise_noise",},
