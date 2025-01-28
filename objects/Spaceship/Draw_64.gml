@@ -11,15 +11,12 @@ if (distance_to_object(Planet) < 200) {
 }
 
 
-
 // Menu
 drawMenu();
 
 
-
 // Draw doodles
 drawDoodles();
-
 
 
 // Color tint
