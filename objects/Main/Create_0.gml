@@ -45,10 +45,12 @@ audio_listener_orientation(0, 1, 0, 0, 0, 1);
 
 // Gameplay
 player = instance_create_layer(10000, 13000, "Spaceship", Spaceship);
+instance_create_layer(10000, 13000, "Spaceship", Camera);
 instance_create_layer(0, 0, "Spaceship", MusicHandler);
 instance_create_layer(0, 0, "Spaceship", OuterSpace);
 instance_create_layer(0, 0, "Spaceship", PlanetHandler);
 instance_create_layer(0, 0, "Spaceship", CursorHandler);
+instance_create_layer(0, 0, "Spaceship", Player);
 
 instance_create_layer(irandom(room_width)/2, irandom(room_height)/2, "Solar_System", SolarSystem);
 
@@ -130,7 +132,8 @@ saveSettings = function() {
 
 
 // For testing
-Debug = false;
+Debug = true;
 
 
+set_planet(instance_nearest(x, y, Planet).components);
 

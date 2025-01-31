@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"print_ds_map",
+  "%Name":"debug_controls",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"print_ds_map",
+  "name":"debug_controls",
   "parent":{
     "name":"Debug",
     "path":"folders/Scripts/Debug.yy",

@@ -6,6 +6,11 @@ hsp = 0;
 vsp = 0;
 force = new vec2();
 
+
+isJumping = false;
+jumpTick = 0;
+jumpTime = 1 * 60;
+
 var Components = function() constructor {
 	self.stamina = 100;
 }
@@ -20,21 +25,42 @@ spriteState = {
 	move: sPlayerMove,
 }
 
+spriteDirection = new vec2(1, 1);
+
+scale = 1;
+
 drawPlayer = function() {
-	if (hsp != 0) image_xscale = sign(hsp);
+	if (hsp != 0) spriteDirection.x = sign(hsp);
 	
-	if (isMoving) {
+	image_speed = 1;
+	
+	if (isJumping) {
+		
 		sprite_index = spriteState.move;
+		
+		image_speed = 0;
+		image_index = 0;
+		
+	} else if (isMoving) {
+		
+		sprite_index = spriteState.move;
+		
 	} else {
+		
 		sprite_index = spriteState.idle;
+		
 	}
+	
+	if (isJumping) {
+		scale = lerp(scale, 1.25, 0.25);
+		image_angle = sin(current_time * 0.008) * 8;
+	}
+	
+	image_xscale = scale * spriteDirection.x;
+	image_yscale = scale * spriteDirection.y;
 	
 	draw_self();
 }
 
 
-// Camera
-with (instance_create_depth(x, y, depth, Camera)) {
-	self.target = other;
-}
 

@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"print_ds_map",
+  "%Name":"set_planet",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"print_ds_map",
+  "name":"set_planet",
   "parent":{
-    "name":"Debug",
-    "path":"folders/Scripts/Debug.yy",
+    "name":"Planet",
+    "path":"folders/Scripts/Planet.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

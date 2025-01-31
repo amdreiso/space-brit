@@ -34,21 +34,20 @@ orbit = function() {
 
 // Planet variables
 components = {
+	
 	resources: {
 		water:						random(1) / irandom(20),
 		stone:						random(1),
 		iron:							random(1),
 		copper:						random(1),
-		gold:							random(1),
+		gold:							random(0.5),
 		silver:						random(1),
 	}
+	
 }
 
 color = {
-	red:		random(1.00),
-	green:	random(1.00),
-	blue:		random(1.00),
-}
-
-show_debug_message(components.resources);
-show_debug_message(color);
+	red:   random(0.8) + other.components.resources.gold * 0.5,
+	green: random(0.8) + other.components.resources.copper * 0.6,
+	blue:  random(1.0) + other.components.resources.water * 0.9,
+};

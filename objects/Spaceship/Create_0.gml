@@ -33,6 +33,7 @@ turnSpeed = 0.2;
 
 mouseAngle = 0;
 
+
 fuel = 1;
 
 
@@ -97,7 +98,7 @@ handleMovement = function() {
 				var black = make_color_rgb(ton, ton, ton);
 				
 				self.spd = irandom(3) + 1;
-				self.move = function(value){
+				self.move = function(value) {
 					x += irandom_range(-value, value);
 					y += irandom_range(-value, value);
 				
@@ -137,6 +138,53 @@ handleMovement = function() {
 	
 	angle += turn;
 	direction = angle;
+}
+
+
+calculateSunProximity = function() {
+	var sun = instance_nearest(x, y, Sun);
+	
+	// If spaceship is in suns radius
+	inSunRadius = (distanceToSun < distanceToSunOffset);
+	
+	if (instance_exists(sun)) {
+		var disOffset = (sprite_get_width(sun.sprite) * sun.scale) / 2;
+	  var dir = point_direction(sun.x, sun.y, x, y);
+    
+	  var xx = lengthdir_x(disOffset, dir);
+	  var yy = lengthdir_y(disOffset, dir);
+    
+	  var edgeX = sun.x + xx;
+	  var edgeY = sun.y + yy;
+		
+	  distanceToSun = point_distance(x, y, edgeX, edgeY);
+		var divider = 1000;
+		var maxDistance = sprite_get_width(sun.sprite) * sun.scale;
+		
+		// beep sfx
+		distanceToSunOffset = disOffset * 2;
+		
+		
+		// Check if the spaceship is in the sun radius, and if the prox. alert is true, it will beep every few seconds
+		// and it will get faster the closer you are to the sun
+		if (!inSunRadius || !menuSettings.sunProximityAlert) return;
+		
+		var beepDis = distanceToSun / distanceToSunOffset;
+		var beepGain = abs(0.25 / (beepDis * 2));
+		beepGain = clamp(beepGain, 0, 0.60);
+		
+		var minFreq = 100;
+		var maxFreq = 1000;
+		
+		var freq = clamp(minFreq + (maxFreq - minFreq) * (distanceToSun / maxDistance), minFreq, maxFreq);
+		
+		beepInterval += GameSpeed;
+		
+		if (beepInterval > freq / (15)) {
+			beepInterval = 0;
+			audio_play_sound(snd_alert1, 0, false, beepGain * get_volume(AUDIO.Effects));
+		}
+	}
 }
 
 
@@ -183,11 +231,6 @@ handleAttack = function() {
 
 
 
-// Camera
-cam = instance_create_depth(x, y, depth, Camera);
-with (cam) {
-	self.target = other;
-}
 
 
 // States
@@ -667,7 +710,6 @@ drawMenu = function() {
 								inventoryGrab.itemID ^= inventory[selectedSlot].itemID;
 								inventoryGrab.amount ^= inventory[selectedSlot].amount;
 								
-								
 							}
 							
 						}
@@ -694,6 +736,8 @@ drawMenu = function() {
 						} else {
 							
 							if (inventory[selectedSlot].itemID == -1 || inventory[selectedSlot].itemID == inventoryGrab.itemID) {
+								
+								if (inventory[selectedSlot].amount >= ITEM_MAX_STACK) return;
 								
 								inventoryGrab.amount --;
 								
@@ -768,6 +812,8 @@ drawMenu = function() {
 			button_gui(xx, sttButtonY, menuSize.width / 1.5, sttButtonHeight, "Sun Prox. Alert: "+str_bool(menuSettings.sunProximityAlert), true, $181818, c_ltgray, 0.25, menuAlpha, function(){
 				if (mouse_check_button_pressed(mb_left)) {
 					menuSettings.sunProximityAlert = !menuSettings.sunProximityAlert;
+					
+					inventoryButtonClick();
 				}
 				
 				window_set_cursor(cr_handpoint);

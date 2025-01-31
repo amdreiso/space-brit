@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"print_ds_map",
+  "%Name":"camera_set_target",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"print_ds_map",
+  "name":"camera_set_target",
   "parent":{
-    "name":"Debug",
-    "path":"folders/Scripts/Debug.yy",
+    "name":"Camera",
+    "path":"folders/Scripts/Camera.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

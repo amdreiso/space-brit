@@ -1,0 +1,2 @@
+
+if (room != rmPlanet) return;

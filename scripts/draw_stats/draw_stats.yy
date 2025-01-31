@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"draw_stats",
   "parent":{
-    "name":"GUI",
-    "path":"folders/Scripts/Draw/GUI.yy",
+    "name":"Debug",
+    "path":"folders/Scripts/Debug.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",
