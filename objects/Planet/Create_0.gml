@@ -1,11 +1,10 @@
 
 sprite_index = sPlanet1;
 
-scale = get_perlin_noise_2D(x, y, 6) + 2;
+scale = irandom(6) + 2;
 
 
-// Center of solar system
-sun = -1;
+sun = -1;						// Center of solar system
 distanceToSun = 0;
 
 orbitSpeed = 0.0002;
@@ -26,7 +25,7 @@ orbit = function() {
 	y = sun.y + lengthdir_y(distanceToSun, angle);
 	
 	if (!setAngle) {
-		angle = get_perlin_noise_2D(x, y, 360, false);
+		angle = irandom(360);
 		setAngle = true;
 	}
 }
@@ -42,6 +41,10 @@ components = {
 		copper:						random(1),
 		gold:							random(0.5),
 		silver:						random(1),
+	},
+	
+	generation: {
+		seed: irandom_range(9999, 99999999),
 	}
 	
 }

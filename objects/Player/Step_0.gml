@@ -84,7 +84,5 @@ if (keyboard_check_pressed(vk_space) && !isJumping) {
 }
 
 
-
 // Camera
-camera_set_target(Player);
-
+camera_set_target(Player, true);

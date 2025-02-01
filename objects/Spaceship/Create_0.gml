@@ -180,7 +180,7 @@ calculateSunProximity = function() {
 		
 		beepInterval += GameSpeed;
 		
-		if (beepInterval > freq / (15)) {
+		if (beepInterval > freq / (15) && !Paused) {
 			beepInterval = 0;
 			audio_play_sound(snd_alert1, 0, false, beepGain * get_volume(AUDIO.Effects));
 		}
@@ -337,7 +337,7 @@ menuSettings = {
 
 menuDrawReturnButton = function(x, y, width) {
 	button_gui(
-		x, y, width / 1.5, 28, "Return",
+		x, y, width / 1.5, 28, ts(9),
 		true, $FF181818, c_ltgray, 0.10, menuAlpha,
 		function(){
 					
@@ -393,7 +393,7 @@ drawMenu = function() {
 	
 	// Draw title
 	var titlePadding = 10;
-	draw_text(xx, (yy - hh / 2) + titlePadding, "Spaceship Menu");
+	draw_text(xx, (yy - hh / 2) + titlePadding, ts(1));
 	
 	var top = (yy - hh / 2) + titlePadding * 2 + 14;
 	
@@ -423,7 +423,7 @@ drawMenu = function() {
 			var buttonSep = 28 * 1.25;
 			
 			button_gui(
-				xx, buttonY, ww/1.5, buttonHeight, "Components",
+				xx, buttonY, ww/1.5, buttonHeight, ts(2),
 				true, $FF181818, c_ltgray, 0.10, menuAlpha,
 				function(){
 					
@@ -439,7 +439,7 @@ drawMenu = function() {
 			);
 			
 			button_gui(
-				xx, buttonY + 1 * buttonSep, ww/1.5, buttonHeight, "Inventory",
+				xx, buttonY + 1 * buttonSep, ww/1.5, buttonHeight, ts(3),
 				true, $FF181818, c_ltgray, 0.10, menuAlpha,
 				function(){
 					
@@ -455,7 +455,7 @@ drawMenu = function() {
 			);
 			
 			button_gui(
-				xx, buttonY + 2 * buttonSep, ww/1.5, buttonHeight, "Health",
+				xx, buttonY + 2 * buttonSep, ww/1.5, buttonHeight, ts(4),
 				true, $FF181818, c_ltgray, 0.10, menuAlpha,
 				function(){
 					
@@ -471,7 +471,7 @@ drawMenu = function() {
 			);
 			
 			button_gui(
-				xx, buttonY + 3 * buttonSep, ww/1.5, buttonHeight, "Settings",
+				xx, buttonY + 3 * buttonSep, ww/1.5, buttonHeight, ts(5),
 				true, $FF181818, c_ltgray, 0.10, menuAlpha,
 				function(){
 					
@@ -609,7 +609,7 @@ drawMenu = function() {
 			
 			// Draw every inventory slot
 			selectedSlot = -1;
-			var itemName = "empty";			
+			var itemName = ts(10);			
 			var itemSpr = -1;			
 
 			for (var i = 0; i < array_length(inventory) - 1; i++) {
@@ -809,7 +809,7 @@ drawMenu = function() {
 			var sttButtonHeight = 28;
 			var sttButtonY = top + 18 + sttButtonHeight * 1.5;
 			
-			button_gui(xx, sttButtonY, menuSize.width / 1.5, sttButtonHeight, "Sun Prox. Alert: "+str_bool(menuSettings.sunProximityAlert), true, $181818, c_ltgray, 0.25, menuAlpha, function(){
+			button_gui(xx, sttButtonY, menuSize.width / 1.5, sttButtonHeight, ts(8)+": "+str_bool(menuSettings.sunProximityAlert), true, $181818, c_ltgray, 0.25, menuAlpha, function(){
 				if (mouse_check_button_pressed(mb_left)) {
 					menuSettings.sunProximityAlert = !menuSettings.sunProximityAlert;
 					

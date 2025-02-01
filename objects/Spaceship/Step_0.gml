@@ -24,6 +24,6 @@ if (keyboard_check(ord("F"))) {
 
 
 // Camera
-camera_set_target(self);
+camera_set_target(Spaceship, true);
 
 

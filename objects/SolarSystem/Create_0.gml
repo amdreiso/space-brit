@@ -3,7 +3,7 @@
 sun = instance_create_layer(x, y, "Glowing_Particles", Sun);
 
 planets = [];
-planetAmount = get_perlin_noise_2D(x, y, 10, true) + 2;
+planetAmount = irandom_range(2, 10);
 
 planetDistance = 0;
 

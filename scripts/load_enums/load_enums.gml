@@ -26,4 +26,10 @@ enum AUDIO {
 	Effects,
 }
 
+enum LANGUAGE {
+	English,
+	Brazilian,
+	Count,
+}
+
 }

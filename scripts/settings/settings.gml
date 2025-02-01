@@ -2,6 +2,7 @@ function settings(){
 	globalvar Settings;
 	Settings = {}
 	
+	// Default Settings
 	with (Settings) {
 		// Audio
 		volume = {
@@ -13,6 +14,9 @@ function settings(){
 		// Instances
 		maxParticlesOnScreen = 1000;
 		glowEffect = false;
+		
+		// Translation
+		language = LANGUAGE.English;
 	}
 	
 	
@@ -22,10 +26,20 @@ function settings(){
 		var content = buffer_read(buffer, buffer_text);
 		buffer_delete(buffer);
 		
-		Settings = json_parse(content);
+		
+		// Set values from save file
+		var loadedSettings = json_parse(content);
+		var names = struct_get_names(loadedSettings);
+		
+		for (var i = 0; i < array_length(names); i++) {
+			var val = variable_struct_get(loadedSettings, names[i]);
+			struct_set(Settings, names[i], val);
+		}
 	}
 	
 	
 	// Apply changes after load
 	layer_enable_fx("Glowing_Particles", Settings.glowEffect);
+	
+	show_debug_message(json_stringify(Settings, true));
 }

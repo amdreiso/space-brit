@@ -11,15 +11,19 @@ GameInfo = {
 
 
 // Main Scripts
+randomize();
+
 fovy();
 load_macros();
 settings();
 
 item_data();
+translation_data();
 
 
 // Globals
 globalvar GameSpeed; GameSpeed = 1;
+globalvar GameSeed; GameSeed = irandom_range(999999, 99999999999);
 globalvar Paused; Paused = false;
 globalvar Debug; Debug = false;
 globalvar Seed; Seed = 2358327;
@@ -29,7 +33,7 @@ globalvar Stars; Stars = {
 }
 
 globalvar ParticleCount; ParticleCount = 0;
- 
+
 
 // Audio
 globalvar Sound; Sound = {};
@@ -70,13 +74,13 @@ repeat (50) {
 	);
 	
 	with (obj) {
-		self.depthFactor = (get_perlin_noise_2D(obj.x, obj.y, 1) + 1) / 50;
+		self.depthFactor = (irandom(1) + 1) / 50;
 
 		self.sprite_index = sStars_particle;
 		self.image_speed = 0;
-		self.image_index = get_perlin_noise_2D(obj.x, obj.y, 2, true);
+		self.image_index = irandom(2);
 		
-		self.scale = get_perlin_noise_2D(obj.x, obj.y, 0.08) / 1.5;
+		self.scale = random(0.08) / 1.5;
 		
 		var val = self.depthFactor + 0.25;
 		var starRGB = choose(
@@ -130,10 +134,344 @@ saveSettings = function() {
 }
 
 
+drawPauseMenu = function() {
+	var x0, y0;
+	x0 = window_get_width() / 2;
+	y0 = window_get_height() / 2;
+
+	var pmOffset = 1;
+
+	if (Paused) {
+	
+		draw_set_alpha(0.5);
+		draw_rectangle_color(0, 0, window_get_width(), window_get_height(), c_black, c_black, c_black, c_black, false);
+		draw_set_alpha(1);
+	
+		pauseMenu.width = lerp(pauseMenu.width, pauseMenu.setWidth, 0.25);
+		pauseMenu.height = lerp(pauseMenu.height, pauseMenu.setHeight, 0.25);
+	
+		pauseMenu.alpha = lerp(pauseMenu.alpha, 1, 0.25);
+	
+	} else {
+	
+		pauseMenu.alpha = lerp(pauseMenu.alpha, 0, 0.25);
+	
+	}
+
+	if (pauseMenu.width > pmOffset && pauseMenu.height > pmOffset && pauseMenu.alpha > 0.05) {
+		draw_set_alpha(pauseMenu.alpha);
+	
+		rect(x0, y0, pauseMenu.width, pauseMenu.height, pauseMenu.backgroundColor, false);
+		rect(x0, y0, pauseMenu.width, pauseMenu.height, pauseMenu.outlineColor, true);
+	
+		var xx = window_get_width() / 2;
+		var yy = window_get_height() / 2;
+	
+		var buttonWidth = pauseMenu.width / 1.5;
+		var buttonHeight = 28;
+		var buttonSep = 28 * 1.25;
+		var checkboxSize = 22;
+		var sliderOffset = (pauseMenu.width / 2) - (buttonHeight * 2) - 2;
+		var sliderOffset2 = (pauseMenu.width / 2) - buttonHeight;
+	
+		var top = (yy - pauseMenu.height / 2) + 50;
+	
+	
+		switch (pauseMenu.page) {
+		
+			case PM_PAGE.Home:
+			
+				// Paused header
+				draw_set_halign(fa_center);
+				draw_text(xx, top - 14, ts(13));
+	
+				button_gui(
+					xx, top + buttonSep, buttonWidth, buttonHeight,
+					ts(5), true, $181818, c_ltgray, 0.10, pauseMenu.alpha,
+					function(){
+						if (mouse_check_button_pressed(mb_left)) {
+							pauseMenu.page = PM_PAGE.Settings;
+						}
+						window_set_cursor(cr_handpoint);
+					}, BUTTON_ORIGIN.MiddleCenter
+				);
+			
+				button_gui(
+					xx, top + 2 * buttonSep, buttonWidth, buttonHeight,
+					ts(14), true, $181818, c_ltgray, 0.10, pauseMenu.alpha,
+					function(){
+						if (mouse_check_button_pressed(mb_left)) {
+							set_pause(false);
+						}
+						window_set_cursor(cr_handpoint);
+					}, BUTTON_ORIGIN.MiddleCenter
+				);
+			
+				break;
+		
+			case PM_PAGE.Settings:
+			
+				button_gui(
+					xx, top, buttonWidth, buttonHeight,
+					ts(9), true, $181818, c_ltgray, 0.10, pauseMenu.alpha,
+					function(){
+						if (mouse_check_button_pressed(mb_left)) {
+							pauseMenu.page = PM_PAGE.Home;
+						}
+						window_set_cursor(cr_handpoint);
+					}, BUTTON_ORIGIN.MiddleCenter
+				);
+			
+			
+				// Settings
+				var x2 = (xx);
+			
+				draw_set_halign(fa_center);
+				draw_set_valign(fa_middle);
+			
+			
+				// Audio settings
+				button_gui(
+					xx, top + 2 * buttonSep, buttonWidth, buttonHeight, ts(12),
+					true, $181818, c_ltgray, 0.1, pauseMenu.alpha, function(){
+						if (mouse_check_button_pressed(mb_left)) {
+							pauseMenu.page = PM_PAGE.AudioSettings;
+						}
+						window_set_cursor(cr_handpoint);
+					}, BUTTON_ORIGIN.MiddleCenter
+				);
+				
+				
+				// GLOW EFFECT
+				button_gui(
+					x2, top + 3 * buttonSep, buttonWidth, buttonHeight,
+					ts(11)+": "+str_bool(layer_fx_is_enabled("Glowing_Particles")), true, $181818, c_ltgray, 0.10, pauseMenu.alpha,
+					function(){
+						if (mouse_check_button_pressed(mb_left)) {
+							var str = "Glowing_Particles";
+							
+							layer_enable_fx(
+								str, 
+								!layer_fx_is_enabled(str)
+							);
+							
+							Settings.glowEffect = layer_fx_is_enabled(str);
+							
+							saveSettings();
+						}
+						window_set_cursor(cr_handpoint);
+					}, BUTTON_ORIGIN.MiddleCenter
+				);
+				
+				
+				
+				// Language Selector
+				button_gui(
+					x2, top + 4 * buttonSep, buttonWidth, buttonHeight,
+					ts(19)+": "+ts(0), true, $181818, c_ltgray, 0.10, pauseMenu.alpha,
+					function(){
+						if (mouse_check_button_pressed(mb_left)) {
+							Settings.language ++;
+							if (Settings.language >= LANGUAGE.Count) Settings.language = 0;
+							
+							saveSettings();
+						}
+						window_set_cursor(cr_handpoint);
+					}, BUTTON_ORIGIN.MiddleCenter
+				);
+				
+				
+				#region AMOUNT OF PARTICLES
+				
+				draw_set_halign(fa_center);
+				draw_set_valign(fa_middle);
+				
+				draw_text_color(xx, top + 6 * buttonSep, ts(18)+": "+string(Settings.maxParticlesOnScreen), c_white, c_white, c_white, c_white, pauseMenu.alpha);
+				
+				button_gui(
+					xx - sliderOffset, top + 6 * buttonSep, buttonHeight, buttonHeight,
+					"<", true, $181818, c_ltgray, 0.10, pauseMenu.alpha,
+					function(){
+						if (mouse_check_button(mb_left) && Settings.maxParticlesOnScreen > 0) {
+							Settings.maxParticlesOnScreen --;
+						
+							saveSettings();
+						}
+						window_set_cursor(cr_handpoint);
+					}, BUTTON_ORIGIN.MiddleCenter
+				);
+			
+				button_gui(
+					xx + sliderOffset, top + 6 * buttonSep, buttonHeight, buttonHeight,
+					">", true, $181818, c_ltgray, 0.10, pauseMenu.alpha,
+					function(){
+						if (mouse_check_button(mb_left) && Settings.maxParticlesOnScreen < 5000) {
+							Settings.maxParticlesOnScreen ++;
+						
+							saveSettings();
+						}
+						window_set_cursor(cr_handpoint);
+					}, BUTTON_ORIGIN.MiddleCenter
+				);
+				
+				button_gui(	
+					xx - sliderOffset2, top + 6 * buttonSep, buttonHeight, buttonHeight,
+					"<<", true, $181818, c_ltgray, 0.10, pauseMenu.alpha,
+					function(){
+						if (mouse_check_button(mb_left) && Settings.maxParticlesOnScreen > 5) {
+							Settings.maxParticlesOnScreen -= 5;
+						
+							saveSettings();
+						}
+						window_set_cursor(cr_handpoint);
+					}, BUTTON_ORIGIN.MiddleCenter
+				);
+			
+				button_gui(
+					xx + sliderOffset2, top + 6 * buttonSep, buttonHeight, buttonHeight,
+					">>", true, $181818, c_ltgray, 0.10, pauseMenu.alpha,
+					function(){
+						if (mouse_check_button(mb_left) && Settings.maxParticlesOnScreen < 4995) {
+							Settings.maxParticlesOnScreen += 5;
+						
+							saveSettings();
+						}
+						window_set_cursor(cr_handpoint);
+					}, BUTTON_ORIGIN.MiddleCenter
+				);
+			
+				#endregion
+			
+				draw_set_halign(fa_left);
+				draw_set_valign(fa_top);
+			
+			
+				break;
+		
+			case PM_PAGE.AudioSettings:
+			
+			
+				button_gui(
+					xx, top, buttonWidth, buttonHeight,
+					ts(9), true, $181818, c_ltgray, 0.10, pauseMenu.alpha,
+					function(){
+						if (mouse_check_button_pressed(mb_left)) {
+							pauseMenu.page = PM_PAGE.Settings;
+						}
+						window_set_cursor(cr_handpoint);
+					}, BUTTON_ORIGIN.MiddleCenter
+				);
+			
+			
+				// Master
+				button_gui(
+					xx - sliderOffset, top + 2 * buttonSep, buttonHeight, buttonHeight,
+					"<", true, $181818, c_ltgray, 0.10, pauseMenu.alpha,
+					function(){
+						if (mouse_check_button(mb_left) && Settings.volume.master > 0) {
+							Settings.volume.master -= 0.01;
+						
+							saveSettings();
+						}
+						window_set_cursor(cr_handpoint);
+					}, BUTTON_ORIGIN.MiddleCenter
+				);
+			
+				button_gui(
+					xx + sliderOffset, top + 2 * buttonSep, buttonHeight, buttonHeight,
+					">", true, $181818, c_ltgray, 0.10, pauseMenu.alpha,
+					function(){
+						if (mouse_check_button(mb_left) && Settings.volume.master < 1) {
+							Settings.volume.master += 0.01;
+						
+							saveSettings();
+						}
+						window_set_cursor(cr_handpoint);
+					}, BUTTON_ORIGIN.MiddleCenter
+				);
+			
+				draw_set_halign(fa_center);
+				draw_text_color(xx, top + 2 * buttonSep, ts(15)+": "+string(Settings.volume.master * 100), c_white, c_white, c_white, c_white, pauseMenu.alpha);
+			
+			
+				// Music
+				button_gui(
+					xx - sliderOffset, top + 3 * buttonSep, buttonHeight, buttonHeight,
+					"<", true, $181818, c_ltgray, 0.10, pauseMenu.alpha,
+					function(){
+						if (mouse_check_button(mb_left) && Settings.volume.music > 0) {
+							Settings.volume.music -= 0.01;
+						
+							saveSettings();
+						}
+						window_set_cursor(cr_handpoint);
+					}, BUTTON_ORIGIN.MiddleCenter
+				);
+			
+				button_gui(
+					xx + sliderOffset, top + 3 * buttonSep, buttonHeight, buttonHeight,
+					">", true, $181818, c_ltgray, 0.10, pauseMenu.alpha,
+					function(){
+						if (mouse_check_button(mb_left) && Settings.volume.music < 1) {
+							Settings.volume.music += 0.01;
+						
+							saveSettings();
+						}
+						window_set_cursor(cr_handpoint);
+					}, BUTTON_ORIGIN.MiddleCenter
+				);
+			
+				draw_set_halign(fa_center);
+			
+				draw_text_color(xx, top + 3 * buttonSep, ts(16)+": "+string(Settings.volume.music * 100), c_white, c_white, c_white, c_white, pauseMenu.alpha);
+			
+			
+				// Effects
+				button_gui(
+					xx - sliderOffset, top + 4 * buttonSep, buttonHeight, buttonHeight,
+					"<", true, $181818, c_ltgray, 0.10, pauseMenu.alpha,
+					function(){
+						if (mouse_check_button(mb_left) && Settings.volume.effects > 0.01) {
+							Settings.volume.effects -= 0.01;
+						
+							saveSettings();
+						}
+						window_set_cursor(cr_handpoint);
+					}, BUTTON_ORIGIN.MiddleCenter
+				);
+			
+				button_gui(
+					xx + sliderOffset, top + 4 * buttonSep, buttonHeight, buttonHeight,
+					">", true, $181818, c_ltgray, 0.10, pauseMenu.alpha,
+					function(){
+						if (mouse_check_button(mb_left) && Settings.volume.effects < 1) {
+							Settings.volume.effects += 0.01;
+						
+							saveSettings();
+						}
+						window_set_cursor(cr_handpoint);
+					}, BUTTON_ORIGIN.MiddleCenter
+				);
+			
+				draw_set_halign(fa_center);
+			
+				draw_text_color(xx, top + 4 * buttonSep, ts(17)+": "+string(Settings.volume.effects * 100), c_white, c_white, c_white, c_white, pauseMenu.alpha);
+			
+				draw_set_halign(fa_left);
+			
+			
+				break;
+		
+		}
+	
+		draw_set_alpha(1);
+	}
+}
+
 
 // For testing
 Debug = true;
 
 
-set_planet(instance_nearest(x, y, Planet).components);
+//set_planet(instance_nearest(x, y, Planet).components);
 
