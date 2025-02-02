@@ -59,25 +59,28 @@ handleMovement = function() {
 
 	var minSpeedTurn = spd / turnForce;
 	var maxTurnSpeed = 5;
-
-	if (keyboard_check(ord("A"))) {
+	
+	var map = get_keymap();
+	
+	// Turn sideways
+	if (map.left) {
 		
-		turn -= turnSpeed * minSpeedTurn;
+		turn -= (turnSpeed * minSpeedTurn);
 		
-	} else if (keyboard_check(ord("D"))) {
+	} else if (map.right) {
 		
-		turn += turnSpeed * minSpeedTurn;
+		turn += (turnSpeed * minSpeedTurn);
 		
 	} else {
+		
 		turn = lerp(turn, 0, 0.1);
+		
 	}
 
-
 	turn = clamp(turn, -maxTurnSpeed, maxTurnSpeed);
-
-
+	
 	// Move Forward
-	if (keyboard_check(ord("W"))) {
+	if (map.forward) {
 		
 		spd += acceleration;
 		spd = clamp(spd, 0, maxSpeed);
@@ -189,12 +192,15 @@ calculateSunProximity = function() {
 
 
 // Attacking
+turretAngle = 0;
 shootingCooldown = 0;
 
 handleAttack = function() {
 	if (busy) return;
 	
-	if (keyboard_check_pressed(vk_space) && shootingCooldown == 0) {
+	var map = get_keymap();
+	
+	if (map.attack && shootingCooldown == 0) {
 		var turret = ItemData[? turretID];
 		
 		var spaceBetween = 4;
@@ -205,15 +211,16 @@ handleAttack = function() {
 		
 		with (instance_create_depth(x + offset_x, y + offset_y, depth+10, SpaceshipProjectile)) {
 			self.sprite_index = sProjectile1;
-			self.direction = other.mouseAngle;
+			self.direction = other.turretAngle;
 			self.speed = 9;
 		}
 		
 		with (instance_create_depth(x - offset_x, y - offset_y, depth+10, SpaceshipProjectile)) {
 			self.sprite_index = sProjectile1;
-			self.direction = other.mouseAngle;
+			self.direction = other.turretAngle;
 			self.speed = 9;
 		}
+		
 		
 		camera_shake(0.75);
 		shootingCooldown = 10;
@@ -222,14 +229,12 @@ handleAttack = function() {
 		
 		// Recoil
 		var recoil = turret.components.recoil;
-		force.x -= lengthdir_x(recoil, mouseAngle);
-		force.y -= lengthdir_y(recoil, mouseAngle);
+		force.x -= lengthdir_x(recoil, turretAngle);
+		force.y -= lengthdir_y(recoil, turretAngle);
 	}
 
 	if (shootingCooldown > 0) shootingCooldown -= GameSpeed;
 }
-
-
 
 
 
@@ -296,6 +301,7 @@ inventoryButtonClick = function() {
 
 
 // Draw
+spaceshipSprite = sSpaceship;
 turretSprite = sTurret;
 
 drawSpaceship = function() {
@@ -306,9 +312,30 @@ drawSpaceship = function() {
 	} else {
 		turretSprite = sTurret;
 	}
-
-	draw_3d(s, x, y+3, turretSprite, s, s, mouseAngle - 90, c_white, 1, true, 100, 10);
-	draw_3d(s, x, y, sSpaceship, s, s, direction-90);
+	
+	// turret points to cursor
+	if (Controller == CONTROLLER.Keyboard) {
+		
+		turretAngle = mouseAngle;
+		
+	// turret points to analog
+	} else if (Controller == CONTROLLER.Gamepad) {
+		
+		var xaxis = gamepad_axis_value(Gamepad, gp_axisrh);
+		var yaxis = gamepad_axis_value(Gamepad, gp_axisrv);
+		
+		var dir = point_direction(x, y, xaxis, yaxis);
+		
+		var tolerance = 0.35;
+		
+		if (abs(xaxis) > tolerance || abs(yaxis) > tolerance) {
+			turretAngle = radtodeg(arctan2(xaxis, yaxis)) - 90;
+		}
+		
+	}
+	
+	draw_3d(s, x, y+3, turretSprite, s, s, turretAngle - 90, c_white, 1, true, 100, 10);
+	draw_3d(s, x, y, spaceshipSprite, s, s, direction - 90);
 }
 
 
@@ -337,13 +364,13 @@ menuSettings = {
 
 menuDrawReturnButton = function(x, y, width) {
 	button_gui(
-		x, y, width / 1.5, 28, ts(9),
+		x, y, width / 1.5, 28, ts(9), 0,
 		true, $FF181818, c_ltgray, 0.10, menuAlpha,
 		function(){
-					
-			if (mouse_check_button_pressed(mb_left)) {
+			
+			if (Keymap.select) {
 				menuPage = SPACESHIP_MENU_PAGE.Home;
-						
+				GamepadMenuIndex = 0;
 				inventoryButtonClick();
 			}
 					
@@ -355,7 +382,9 @@ menuDrawReturnButton = function(x, y, width) {
 
 
 drawMenu = function() {
-	if (keyboard_check_pressed(ord("E")) && !Paused) {
+	var map = get_keymap();
+	
+	if (map.menu && !Paused) {
 		menu = !menu;
 	}
 	
@@ -402,6 +431,8 @@ drawMenu = function() {
 		
 		case SPACESHIP_MENU_PAGE.Home:
 			
+			gp_menu(0, 3);
+			
 			var modelScale = 3;
 			var modelY = top + 70;
 			var modelAngle = point_direction(xx, modelY, window_mouse_get_x(), window_mouse_get_y());
@@ -412,8 +443,8 @@ drawMenu = function() {
 			draw_3d(modelScale, xx, modelY + 3, turretSprite, modelScale, modelScale, modelAngle - 90, c_white, menuAlpha, true, 100, 10);
 			draw_3d(modelScale, xx, modelY, sSpaceship, modelScale, modelScale, menuModelTheta-90, c_white, menuAlpha);
 			
-			button_gui(xx, modelY, 80, 80, "", false, 0, 0, 0, menuAlpha, function(){
-				if (mouse_check_button_pressed(mb_left)) {
+			button_gui(xx, modelY, 80, 80, "", -1, false, 0, 0, 0, menuAlpha, function(){
+				if (Keymap.select) {
 					menuModelThetaForce = random(20.0);
 				}
 			}, BUTTON_ORIGIN.MiddleCenter);
@@ -423,12 +454,13 @@ drawMenu = function() {
 			var buttonSep = 28 * 1.25;
 			
 			button_gui(
-				xx, buttonY, ww/1.5, buttonHeight, ts(2),
+				xx, buttonY, ww/1.5, buttonHeight, ts(2), 0,
 				true, $FF181818, c_ltgray, 0.10, menuAlpha,
 				function(){
 					
-					if (mouse_check_button_pressed(mb_left)) {
+					if (Keymap.select) {
 						menuPage = SPACESHIP_MENU_PAGE.Build;
+						GamepadMenuIndex = 0;
 						
 						inventoryButtonClick();
 					}
@@ -439,12 +471,13 @@ drawMenu = function() {
 			);
 			
 			button_gui(
-				xx, buttonY + 1 * buttonSep, ww/1.5, buttonHeight, ts(3),
+				xx, buttonY + 1 * buttonSep, ww/1.5, buttonHeight, ts(3), 1,
 				true, $FF181818, c_ltgray, 0.10, menuAlpha,
 				function(){
 					
-					if (mouse_check_button_pressed(mb_left)) {
+					if (Keymap.select) {
 						menuPage = SPACESHIP_MENU_PAGE.Inventory;
+						GamepadMenuIndex = 0;
 						
 						inventoryButtonClick();
 					}
@@ -455,12 +488,13 @@ drawMenu = function() {
 			);
 			
 			button_gui(
-				xx, buttonY + 2 * buttonSep, ww/1.5, buttonHeight, ts(4),
+				xx, buttonY + 2 * buttonSep, ww/1.5, buttonHeight, ts(4), 2,
 				true, $FF181818, c_ltgray, 0.10, menuAlpha,
 				function(){
 					
-					if (mouse_check_button_pressed(mb_left)) {
+					if (Keymap.select) {
 						menuPage = SPACESHIP_MENU_PAGE.Health;
+						GamepadMenuIndex = 0;
 						
 						inventoryButtonClick();
 					}
@@ -471,12 +505,13 @@ drawMenu = function() {
 			);
 			
 			button_gui(
-				xx, buttonY + 3 * buttonSep, ww/1.5, buttonHeight, ts(5),
+				xx, buttonY + 3 * buttonSep, ww/1.5, buttonHeight, ts(5), 3,
 				true, $FF181818, c_ltgray, 0.10, menuAlpha,
 				function(){
 					
-					if (mouse_check_button_pressed(mb_left)) {
+					if (Keymap.select) {
 						menuPage = SPACESHIP_MENU_PAGE.Settings;
+						GamepadMenuIndex = 0;
 						
 						inventoryButtonClick();
 					}
@@ -485,7 +520,6 @@ drawMenu = function() {
 					
 				}, BUTTON_ORIGIN.MiddleCenter
 			);
-			
 			
 			
 			// Draw radar
@@ -520,10 +554,8 @@ drawMenu = function() {
 						draw_circle_color(
 							radarX + pos.x, radarY + pos.y, 3,
 							color, color, false
-						);
-						
-					}
-					
+						);	
+					}	
 				}
 				
 			}
@@ -578,11 +610,11 @@ drawMenu = function() {
 			draw_set_alpha(menuAlpha);
 			
 			button_gui(
-				buttonX, buttonY, buttonSize, buttonSize, "",
+				buttonX, buttonY, buttonSize, buttonSize, "", 1,
 				true, $FF181818, c_ltgray, 0.10, menuAlpha,
 				function(){
 					
-					if (mouse_check_button_pressed(mb_left)) {
+					if (Keymap.select) {
 						inventoryButtonClick();
 					}
 					
@@ -603,6 +635,9 @@ drawMenu = function() {
 			break;
 		
 		case SPACESHIP_MENU_PAGE.Inventory:
+			
+			// Quantity of buttons
+			gp_menu(0, array_length(inventory) + 1);
 			
 			menuDrawReturnButton(xx, top + 14, ww);
 			
@@ -643,7 +678,7 @@ drawMenu = function() {
 					itemName = ItemData[? inventory[selectedSlot].itemID].name;
 				}
 				
-				button_gui(slotX, slotY, slotSize, slotSize, "", true, $181818, c_ltgray, 0.1, menuAlpha, function(){
+				button_gui(slotX, slotY, slotSize, slotSize, "", i + 1, true, $181818, c_ltgray, 0.1, menuAlpha, function(){
 					
 					selectedSlot = ii;
 					
@@ -796,11 +831,17 @@ drawMenu = function() {
 		
 		case SPACESHIP_MENU_PAGE.Health:
 			
+			// Quantity of buttons
+			gp_menu(0, 0);
+			
 			menuDrawReturnButton(xx, top + 14, ww);
 			
 			break;
 		
 		case SPACESHIP_MENU_PAGE.Settings:
+			
+			// Quantity of buttons
+			gp_menu(0, 1);
 			
 			menuDrawReturnButton(xx, top + 14, ww);
 			
@@ -809,8 +850,8 @@ drawMenu = function() {
 			var sttButtonHeight = 28;
 			var sttButtonY = top + 18 + sttButtonHeight * 1.5;
 			
-			button_gui(xx, sttButtonY, menuSize.width / 1.5, sttButtonHeight, ts(8)+": "+str_bool(menuSettings.sunProximityAlert), true, $181818, c_ltgray, 0.25, menuAlpha, function(){
-				if (mouse_check_button_pressed(mb_left)) {
+			button_gui(xx, sttButtonY, menuSize.width / 1.5, sttButtonHeight, ts(8)+": "+str_bool(menuSettings.sunProximityAlert), 1, true, $181818, c_ltgray, 0.25, menuAlpha, function(){
+				if (Keymap.select) {
 					menuSettings.sunProximityAlert = !menuSettings.sunProximityAlert;
 					
 					inventoryButtonClick();
@@ -857,7 +898,7 @@ drawDoodles = function() {
 		selectedDoodle = doodles[i];
 		
 		if (selectedDoodle.fn()) {
-			button_gui(xx, yy, size, size, "", false, 0, 0, 0, 1, function(){
+			button_gui(xx, yy, size, size, "", -1, false, 0, 0, 0, 1, function(){
 				
 				draw_set_halign(fa_right);
 				draw_set_valign(fa_bottom);
@@ -871,7 +912,6 @@ drawDoodles = function() {
 		
 			draw_sprite(selectedDoodle.sprite, 0, xx, yy);
 		}
-		
 	}
 	
 }

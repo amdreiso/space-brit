@@ -93,7 +93,7 @@ function button(
 }
 
 function button_gui(
-	x, y, width, height, label = "",
+	x, y, width, height, label = "", gamepadID = -1,
 	hasOutline = true, outlineColor = c_white, hoverColor = c_white, hoverAlpha = 0.25, alpha = 1, hoverFunction = function(){},
 	orientation = 0
 ) {
@@ -102,6 +102,11 @@ function button_gui(
 	my = window_mouse_get_y();
 	
 	var range;
+	var gpRange;
+	
+	gpRange = (GamepadMenuIndex == gamepadID && gamepadID != -1 && Controller == CONTROLLER.Gamepad);
+	var gpButtonSize = 2;
+	var gpButtonColor = c_ltgray;
 	
 	switch (orientation) {
 		case BUTTON_ORIGIN.Left:
@@ -129,6 +134,21 @@ function button_gui(
 					hoverColor, hoverColor, hoverColor, hoverColor, false
 				);
 				draw_set_alpha(1);
+				
+				hoverFunction();
+			}
+			
+			if (gpRange) {
+				draw_set_alpha(hoverAlpha * alpha);
+				draw_rectangle_color(
+					x, y, 
+					x + width, y + height, 
+					hoverColor, hoverColor, hoverColor, hoverColor, false
+				);
+				draw_set_alpha(1);
+				
+				// Draw big rectangle 
+				rect(x, y, width, height, gpButtonColor, true, alpha, gpButtonSize);
 				
 				hoverFunction();
 			}
@@ -168,6 +188,21 @@ function button_gui(
 					hoverColor, hoverColor, hoverColor, hoverColor, false
 				);
 				draw_set_alpha(1);
+				
+				hoverFunction();
+			}
+			
+			if (gpRange) {
+				draw_set_alpha(hoverAlpha * alpha);
+				draw_rectangle_color(
+					x - width / 2, y - height / 2, 
+					x + width / 2, y + height / 2, 
+					hoverColor, hoverColor, hoverColor, hoverColor, false
+				);
+				draw_set_alpha(1);
+				
+				// Draw big rectangle 
+				rect(x, y, width, height, gpButtonColor, true, alpha, gpButtonSize);
 				
 				hoverFunction();
 			}
@@ -305,11 +340,19 @@ function random_seed(range){
 	return rand;
 }
 
-function rect(x, y, width, height, color = c_white, outline = false) {
-	draw_rectangle_color(
-		x-width/2, y-height/2, x+width/2, y+height/2, 
-		color, color, color, color, outline
-	);
+function rect(x, y, width, height, color = c_white, outline = false, alpha = 1, size = 1) {
+	for (var i = 0; i < size; i++) {
+		var step = 1;
+		draw_set_alpha(alpha);
+		draw_rectangle_color(
+			x - width / 2 + i / step, 
+			y - height / 2 + i / step, 
+			x + width / 2 - i / step, 
+			y + height / 2 - i / step, 
+			color, color, color, color, outline
+		);
+		draw_set_alpha(1);
+	}
 }
 
 function random_array_argument(array){

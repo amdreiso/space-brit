@@ -28,8 +28,13 @@ enum AUDIO {
 
 enum LANGUAGE {
 	English,
-	Brazilian,
+	BrazilianPortuguese,
 	Count,
+}
+
+enum CONTROLLER {
+	Keyboard,
+	Gamepad,
 }
 
 }

@@ -10,16 +10,6 @@ GameInfo = {
 };
 
 
-// Main Scripts
-randomize();
-
-fovy();
-load_macros();
-settings();
-
-item_data();
-translation_data();
-
 
 // Globals
 globalvar GameSpeed; GameSpeed = 1;
@@ -34,6 +24,14 @@ globalvar Stars; Stars = {
 
 globalvar ParticleCount; ParticleCount = 0;
 
+// Gamepad
+globalvar Gamepad; Gamepad = 0;
+globalvar GamepadWasFound; GamepadWasFound = "not found";
+globalvar GamepadMenuIndex; GamepadMenuIndex = 0;
+
+globalvar Controller; Controller = CONTROLLER.Keyboard;
+
+globalvar Keymap; Keymap = get_keymap();
 
 // Audio
 globalvar Sound; Sound = {};
@@ -44,6 +42,20 @@ Sound.multiplier = 1;
 
 audio_falloff_set_model(audio_falloff_inverse_distance);
 audio_listener_orientation(0, 1, 0, 0, 0, 1);
+
+
+
+// Main Scripts
+randomize();
+
+fovy();
+load_macros();
+
+item_data();
+translation_data();
+get_keymap();
+
+settings();
 
 
 
@@ -74,7 +86,7 @@ repeat (50) {
 	);
 	
 	with (obj) {
-		self.depthFactor = (irandom(1) + 1) / 50;
+		self.depthFactor = (random(1.00) + 1) / 50;
 
 		self.sprite_index = sStars_particle;
 		self.image_speed = 0;
@@ -101,11 +113,36 @@ repeat (50) {
 		
 		self.update = function() {
 			if (point_distance_3d(x, 0, 0, Spaceship.x, 0, 0) > 500) {
-				
 			}
 		}
 	}
 }
+
+
+
+// Gamepad
+findGamepad = function(showMsg = false) {
+	for (var i = 0; i < gamepad_get_device_count(); i++) {
+		if (gamepad_is_connected(i)) {
+			Gamepad = i;
+			GamepadWasFound = "found!";
+			
+			Keymap = get_keymap();
+			
+			show_debug_message($"Device {i} was connected as a gamepad!");
+			
+			return;
+		}
+	}
+	
+	if (showMsg)
+		show_message("Could not connect gamepad");
+	
+	show_debug_message("Could not connect gamepad");
+}
+
+findGamepad();
+
 
 
 // Pause menu
@@ -113,6 +150,7 @@ enum PM_PAGE {
 	Home,
 	Settings,
 	AudioSettings,
+	DeviceSettings,
 }
 
 pauseMenu = {
@@ -264,7 +302,6 @@ drawPauseMenu = function() {
 				);
 				
 				
-				
 				// Language Selector
 				button_gui(
 					x2, top + 4 * buttonSep, buttonWidth, buttonHeight,
@@ -280,6 +317,19 @@ drawPauseMenu = function() {
 					}, BUTTON_ORIGIN.MiddleCenter
 				);
 				
+				// Device Settings
+				button_gui(
+					x2, top + 5 * buttonSep, buttonWidth, buttonHeight,
+					ts(20), true, $181818, c_ltgray, 0.10, pauseMenu.alpha,
+					function(){
+						if (mouse_check_button_pressed(mb_left)) {
+							pauseMenu.page = PM_PAGE.DeviceSettings;
+							
+							saveSettings();
+						}
+						window_set_cursor(cr_handpoint);
+					}, BUTTON_ORIGIN.MiddleCenter
+				);
 				
 				#region AMOUNT OF PARTICLES
 				
@@ -344,6 +394,7 @@ drawPauseMenu = function() {
 			
 				draw_set_halign(fa_left);
 				draw_set_valign(fa_top);
+			
 			
 			
 				break;
@@ -462,6 +513,69 @@ drawPauseMenu = function() {
 			
 				break;
 		
+			case PM_PAGE.DeviceSettings:
+				
+				button_gui(
+					xx, top, buttonWidth, buttonHeight,
+					ts(9), true, $181818, c_ltgray, 0.10, pauseMenu.alpha,
+					function(){
+						if (mouse_check_button_pressed(mb_left)) {
+							pauseMenu.page = PM_PAGE.Settings;
+						}
+						window_set_cursor(cr_handpoint);
+					}, BUTTON_ORIGIN.MiddleCenter
+				);
+			
+			
+				// Find Gamepad
+				button_gui(
+					xx, top + 2 * buttonSep, buttonWidth, buttonHeight,
+					ts(21)+": "+GamepadWasFound, true, $181818, c_ltgray, 0.10, pauseMenu.alpha,
+					function(){
+						if (mouse_check_button_pressed(mb_left)) {
+							findGamepad(true);
+							saveSettings();
+						}
+						window_set_cursor(cr_handpoint);
+					}, BUTTON_ORIGIN.MiddleCenter
+				);
+				
+				
+				// Set gamepad deadzone
+				button_gui(
+					xx - sliderOffset, top + 3 * buttonSep, buttonHeight, buttonHeight,
+					"<", true, $181818, c_ltgray, 0.10, pauseMenu.alpha,
+					function(){
+						if (mouse_check_button(mb_left) && Settings.gamepad.deadzone > 0) {
+							Settings.gamepad.deadzone -= 0.005;
+							gamepad_set_axis_deadzone(Gamepad, Settings.gamepad.deadzone);
+							
+							saveSettings();
+						}
+						window_set_cursor(cr_handpoint);
+					}, BUTTON_ORIGIN.MiddleCenter
+				);
+			
+				button_gui(
+					xx + sliderOffset, top + 3 * buttonSep, buttonHeight, buttonHeight,
+					">", true, $181818, c_ltgray, 0.10, pauseMenu.alpha,
+					function(){
+						if (mouse_check_button(mb_left) && Settings.gamepad.deadzone < 1) {
+							Settings.gamepad.deadzone += 0.005;
+							gamepad_set_axis_deadzone(Gamepad, Settings.gamepad.deadzone);
+						
+							saveSettings();
+						}
+						window_set_cursor(cr_handpoint);
+					}, BUTTON_ORIGIN.MiddleCenter
+				);
+				
+				draw_set_halign(fa_center);
+				draw_text_color(xx, top + 3 * buttonSep, ts(21)+": "+string(Settings.gamepad.deadzone), c_white, c_white, c_white, c_white, pauseMenu.alpha);
+			
+			
+				break;
+		
 		}
 	
 		draw_set_alpha(1);
@@ -475,3 +589,4 @@ Debug = true;
 
 //set_planet(instance_nearest(x, y, Planet).components);
 
+deviceColor = 0;

@@ -29,32 +29,35 @@ TranslationData[LANGUAGE.English, 16] = "Music";
 TranslationData[LANGUAGE.English, 17] = "SFX";
 TranslationData[LANGUAGE.English, 18] = "Max. particles";
 TranslationData[LANGUAGE.English, 19] = "Language";
+TranslationData[LANGUAGE.English, 20] = "Device Settings";
+TranslationData[LANGUAGE.English, 21] = "Find Gamepad";
+TranslationData[LANGUAGE.English, 21] = "Gamepad Deadzone";
 
 #endregion
 
 
-#region Brazilian
+#region BrazilianPortuguese
 
-TranslationData[LANGUAGE.Brazilian, 0] = "Português Brasileiro";
-TranslationData[LANGUAGE.Brazilian, 1] = "Menu da nave";
-TranslationData[LANGUAGE.Brazilian, 2] = "Componentes";
-TranslationData[LANGUAGE.Brazilian, 3] = "Inventário";
-TranslationData[LANGUAGE.Brazilian, 4] = "Saúde";
-TranslationData[LANGUAGE.Brazilian, 5] = "Configurações";
-TranslationData[LANGUAGE.Brazilian, 6] = "verdadeiro";
-TranslationData[LANGUAGE.Brazilian, 7] = "falso";
-TranslationData[LANGUAGE.Brazilian, 8] = "Alerta de Prox. do Sol";
-TranslationData[LANGUAGE.Brazilian, 9] = "Retornar";
-TranslationData[LANGUAGE.Brazilian, 10] = "vazio";
-TranslationData[LANGUAGE.Brazilian, 11] = "Efeito de Brilho";
-TranslationData[LANGUAGE.Brazilian, 12] = "Configurações de Áudio";
-TranslationData[LANGUAGE.Brazilian, 13] = "Pausado";
-TranslationData[LANGUAGE.Brazilian, 14] = "Voltar";
-TranslationData[LANGUAGE.Brazilian, 15] = "Geral";
-TranslationData[LANGUAGE.Brazilian, 16] = "Música";
-TranslationData[LANGUAGE.Brazilian, 17] = "Efeitos Sonoros";
-TranslationData[LANGUAGE.Brazilian, 18] = "Máx. de partículas";
-TranslationData[LANGUAGE.Brazilian, 19] = "Idioma";
+TranslationData[LANGUAGE.BrazilianPortuguese, 0] = "Português Brasileiro";
+TranslationData[LANGUAGE.BrazilianPortuguese, 1] = "Menu da nave";
+TranslationData[LANGUAGE.BrazilianPortuguese, 2] = "Componentes";
+TranslationData[LANGUAGE.BrazilianPortuguese, 3] = "Inventário";
+TranslationData[LANGUAGE.BrazilianPortuguese, 4] = "Saúde";
+TranslationData[LANGUAGE.BrazilianPortuguese, 5] = "Configurações";
+TranslationData[LANGUAGE.BrazilianPortuguese, 6] = "verdadeiro";
+TranslationData[LANGUAGE.BrazilianPortuguese, 7] = "falso";
+TranslationData[LANGUAGE.BrazilianPortuguese, 8] = "Alerta de Prox. do Sol";
+TranslationData[LANGUAGE.BrazilianPortuguese, 9] = "Retornar";
+TranslationData[LANGUAGE.BrazilianPortuguese, 10] = "vazio";
+TranslationData[LANGUAGE.BrazilianPortuguese, 11] = "Efeito de Brilho";
+TranslationData[LANGUAGE.BrazilianPortuguese, 12] = "Configurações de Áudio";
+TranslationData[LANGUAGE.BrazilianPortuguese, 13] = "Pausado";
+TranslationData[LANGUAGE.BrazilianPortuguese, 14] = "Voltar";
+TranslationData[LANGUAGE.BrazilianPortuguese, 15] = "Geral";
+TranslationData[LANGUAGE.BrazilianPortuguese, 16] = "Música";
+TranslationData[LANGUAGE.BrazilianPortuguese, 17] = "Efeitos Sonoros";
+TranslationData[LANGUAGE.BrazilianPortuguese, 18] = "Máx. de partículas";
+TranslationData[LANGUAGE.BrazilianPortuguese, 19] = "Idioma";
 
 #endregion
 

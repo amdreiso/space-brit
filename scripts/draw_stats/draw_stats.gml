@@ -48,7 +48,7 @@ function draw_stats(){
 		
 		var width = 75;
 		
-		button_gui(1 + i * (width + 1), 1, width, sep, buttons[i].label, true, c_white, c_white, 0.25, 1, buttons[i].fn, BUTTON_ORIGIN.Left);
+		button_gui(1 + i * (width + 1), 1, width, sep, buttons[i].label, -1, true, c_white, c_white, 0.25, 1, buttons[i].fn, BUTTON_ORIGIN.Left);
 	}
 	
 	draw_text(0, 2 * sep,	$"{ GameInfo.name} made by { GameInfo.author}");
@@ -57,5 +57,8 @@ function draw_stats(){
 	draw_text(0, 5 * sep, $"x: { player.x} y: { player.y}");
 	draw_text(0, 6 * sep, $"cx: { Camera.x} cy: { Camera.y}");
 	draw_text(0, 7 * sep, $"p: { instance_number(Particle)} o: { instance_number(all)}");
+	draw_text(0, 8 * sep, $"axislh: { gamepad_axis_value(Gamepad, gp_axislh)} axislv: { gamepad_axis_value(Gamepad, gp_axislv)}");
+	draw_text(0, 9 * sep, $"axisrh: { gamepad_axis_value(Gamepad, gp_axisrh)} axisrv: { gamepad_axis_value(Gamepad, gp_axisrv)}");
+	draw_text(0, 10 * sep, $"controller: {Controller} | gpMenuIndex: {GamepadMenuIndex}");
 	
 }

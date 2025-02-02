@@ -1,5 +1,9 @@
 
-sprite_index = sPlanet1;
+sprite_index = choose(
+	sPlanet1,
+	sPlanet2,
+	sPlanet3,
+);
 
 scale = irandom(6) + 2;
 

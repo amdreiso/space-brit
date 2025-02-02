@@ -17,6 +17,10 @@ function settings(){
 		
 		// Translation
 		language = LANGUAGE.English;
+		
+		gamepad = {
+			deadzone: 0.00,
+		}
 	}
 	
 	
@@ -38,8 +42,15 @@ function settings(){
 	}
 	
 	
-	// Apply changes after load
+	/// Apply changes after load
+	
+	// Toggle glow effect
 	layer_enable_fx("Glowing_Particles", Settings.glowEffect);
+	
+	// Set gamepad deadzone
+	if (gamepad_is_connected(Gamepad))
+		gamepad_set_axis_deadzone(Gamepad, Settings.gamepad.deadzone);
+	
 	
 	show_debug_message(json_stringify(Settings, true));
 }
