@@ -20,7 +20,7 @@ function rgb(r, g, b) constructor { self.r = r; self.g = g; self.b = b; }
 function button(
 	x, y, width, height, label = "",
 	hasOutline = true, outlineColor = c_white, hoverColor = c_white, hoverAlpha = 0.25, hoverFunction = function(){},
-	orientation = 0
+	orientation = 0, cursor = true
 ) {
 	var range;
 	
@@ -46,6 +46,10 @@ function button(
 					hoverColor, hoverColor, hoverColor, hoverColor, false
 				);
 				draw_set_alpha(1);
+				
+				if (cursor) {
+					set_cursor(CURSOR.Pointer);
+				}
 				
 				hoverFunction();
 			}
@@ -95,7 +99,7 @@ function button(
 function button_gui(
 	x, y, width, height, label = "", gamepadID = -1,
 	hasOutline = true, outlineColor = c_white, hoverColor = c_white, hoverAlpha = 0.25, alpha = 1, hoverFunction = function(){},
-	orientation = 0
+	orientation = 0, cursor = true
 ) {
 	var mx, my;
 	mx = window_mouse_get_x();
@@ -111,7 +115,7 @@ function button_gui(
 	switch (orientation) {
 		case BUTTON_ORIGIN.Left:
 			
-			range = (mx > x && mx < x + width && my > y && my < y + height);
+			range = (mx > x && mx < x + width && my > y && my < y + height && Controller == CONTROLLER.Keyboard);
 			
 			// Draw outline
 			if (hasOutline) {
@@ -135,6 +139,10 @@ function button_gui(
 				);
 				draw_set_alpha(1);
 				
+				if (cursor) {
+					set_cursor(CURSOR.Pointer);
+				}
+				
 				hoverFunction();
 			}
 			
@@ -149,6 +157,10 @@ function button_gui(
 				
 				// Draw big rectangle 
 				rect(x, y, width, height, gpButtonColor, true, alpha, gpButtonSize);
+				
+				if (cursor) {
+					set_cursor(CURSOR.Pointer);
+				}
 				
 				hoverFunction();
 			}
@@ -166,7 +178,7 @@ function button_gui(
 				mx > x - width / 2 && 
 				mx < x + width / 2 && 
 				my > y - height / 2 && 
-				my < y + height / 2
+				my < y + height / 2 && Controller == CONTROLLER.Keyboard
 			);
 			
 			// Draw outline
@@ -189,6 +201,10 @@ function button_gui(
 				);
 				draw_set_alpha(1);
 				
+				if (cursor) {
+					set_cursor(CURSOR.Pointer);
+				}
+				
 				hoverFunction();
 			}
 			
@@ -204,6 +220,10 @@ function button_gui(
 				// Draw big rectangle 
 				rect(x, y, width, height, gpButtonColor, true, alpha, gpButtonSize);
 				
+				if (cursor) {
+					set_cursor(CURSOR.Pointer);
+				}
+				
 				hoverFunction();
 			}
 			
@@ -212,7 +232,7 @@ function button_gui(
 			
 			draw_set_alpha(alpha);
 			draw_text(x, y, label);
-				draw_set_alpha(1);
+			draw_set_alpha(1);
 			
 			draw_set_halign(fa_left);
 			draw_set_valign(fa_top);
@@ -284,7 +304,7 @@ function get_perlin_noise_1D(xx, range){
 
 // Code from Arend Peter Teaches
 function get_perlin_noise_2D(xx, yy, range, r = false){
-	var chunkSize = 128;
+	var chunkSize = 4;
 	var noise = 0;
 
 	range = range div 2;

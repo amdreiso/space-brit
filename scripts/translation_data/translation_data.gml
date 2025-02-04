@@ -31,7 +31,7 @@ TranslationData[LANGUAGE.English, 18] = "Max. particles";
 TranslationData[LANGUAGE.English, 19] = "Language";
 TranslationData[LANGUAGE.English, 20] = "Device Settings";
 TranslationData[LANGUAGE.English, 21] = "Find Gamepad";
-TranslationData[LANGUAGE.English, 21] = "Gamepad Deadzone";
+TranslationData[LANGUAGE.English, 22] = "Gamepad Deadzone";
 
 #endregion
 
@@ -58,9 +58,11 @@ TranslationData[LANGUAGE.BrazilianPortuguese, 16] = "Música";
 TranslationData[LANGUAGE.BrazilianPortuguese, 17] = "Efeitos Sonoros";
 TranslationData[LANGUAGE.BrazilianPortuguese, 18] = "Máx. de partículas";
 TranslationData[LANGUAGE.BrazilianPortuguese, 19] = "Idioma";
+TranslationData[LANGUAGE.BrazilianPortuguese, 20] = "Confugurações de Dispotivos";
+TranslationData[LANGUAGE.BrazilianPortuguese, 21] = "Procurar Gamepad";
+TranslationData[LANGUAGE.BrazilianPortuguese, 22] = "Gamepad Deadzone";
 
 #endregion
-
 
 
 }

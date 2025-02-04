@@ -384,8 +384,9 @@ menuDrawReturnButton = function(x, y, width) {
 drawMenu = function() {
 	var map = get_keymap();
 	
-	if (map.menu && !Paused) {
+	if (map.menu && !busy) {
 		menu = !menu;
+		GamepadMenuIndex = 0;
 	}
 	
 	if (menu) {
@@ -400,7 +401,7 @@ drawMenu = function() {
 		return;
 	}
 	
-	if (keyboard_check_pressed(vk_escape)) {
+	if (Keymap.start) {
 		menu = false;
 	}
 	
@@ -414,8 +415,8 @@ drawMenu = function() {
 	draw_set_alpha(menuAlpha);
 	
 	// Draw background
-	rect(xx, yy, ww, hh, c0, false);
-	rect(xx, yy, ww, hh, c1, true);
+	rect(xx, yy, ww, hh, c0, false, menuAlpha);
+	rect(xx, yy, ww, hh, c1, true, menuAlpha);
 	
 	draw_set_valign(fa_top);
 	draw_set_halign(fa_center);

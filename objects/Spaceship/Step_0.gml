@@ -3,7 +3,7 @@ if (room != rmOuterSpace) return;
 
 
 // Check if spaceship is USABLE
-busy = (Paused);
+busy = (Paused || Console);
 
 
 // Movement

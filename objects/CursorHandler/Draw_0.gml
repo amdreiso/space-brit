@@ -15,5 +15,7 @@ if (instance_exists(Camera)) {
 }
 
 button(xx, yy, size, size, "", false, c_black, c_black, 0, function(){
-	window_set_cursor(cr_default);
-}, BUTTON_ORIGIN.MiddleCenter);
+	
+	set_cursor(CURSOR.Normal);
+	
+}, BUTTON_ORIGIN.MiddleCenter, false);

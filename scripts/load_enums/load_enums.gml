@@ -37,4 +37,34 @@ enum CONTROLLER {
 	Gamepad,
 }
 
+enum CURSOR {
+	Normal,
+	Pointer,
+}
+
+enum PLANET_TYPE {
+	Arid,
+	Rocky,
+	Icy,
+	Volcanic,
+	Count,
+}
+
+
+enum TILE_TYPE {
+	Solid,
+	Liquid,
+}
+
+enum TILE {
+	Arid1,
+}
+
+
+
+
+
+
+
+
 }

@@ -17,12 +17,15 @@ globalvar GameSeed; GameSeed = irandom_range(999999, 99999999999);
 globalvar Paused; Paused = false;
 globalvar Debug; Debug = false;
 globalvar Seed; Seed = 2358327;
-globalvar StarGrid; StarGrid = ds_map_create();
-globalvar Stars; Stars = {
-	chunk: 128,
-}
+globalvar Console; Console = false;
+
+//globalvar StarGrid; StarGrid = ds_map_create();
+//globalvar Stars; Stars = {
+//	chunk: 128,
+//}
 
 globalvar ParticleCount; ParticleCount = 0;
+
 
 // Gamepad
 globalvar Gamepad; Gamepad = 0;
@@ -32,6 +35,8 @@ globalvar GamepadMenuIndex; GamepadMenuIndex = 0;
 globalvar Controller; Controller = CONTROLLER.Keyboard;
 
 globalvar Keymap; Keymap = get_keymap();
+
+
 
 // Audio
 globalvar Sound; Sound = {};
@@ -52,7 +57,11 @@ fovy();
 load_macros();
 
 item_data();
+planet_data();
+tile_data();
 translation_data();
+command_data();
+
 get_keymap();
 
 settings();
@@ -67,6 +76,7 @@ instance_create_layer(0, 0, "Spaceship", OuterSpace);
 instance_create_layer(0, 0, "Spaceship", PlanetHandler);
 instance_create_layer(0, 0, "Spaceship", CursorHandler);
 instance_create_layer(0, 0, "Spaceship", Player);
+instance_create_layer(0, 0, "Spaceship", Cursor);
 
 instance_create_layer(irandom(room_width)/2, irandom(room_height)/2, "Solar_System", SolarSystem);
 
@@ -121,7 +131,7 @@ repeat (50) {
 
 
 // Gamepad
-findGamepad = function(showMsg = false) {
+findGamepad = function() {
 	for (var i = 0; i < gamepad_get_device_count(); i++) {
 		if (gamepad_is_connected(i)) {
 			Gamepad = i;
@@ -135,13 +145,10 @@ findGamepad = function(showMsg = false) {
 		}
 	}
 	
-	if (showMsg)
-		show_message("Could not connect gamepad");
-	
 	show_debug_message("Could not connect gamepad");
 }
 
-findGamepad();
+alarm[0] = 3;
 
 
 
@@ -199,8 +206,8 @@ drawPauseMenu = function() {
 	if (pauseMenu.width > pmOffset && pauseMenu.height > pmOffset && pauseMenu.alpha > 0.05) {
 		draw_set_alpha(pauseMenu.alpha);
 	
-		rect(x0, y0, pauseMenu.width, pauseMenu.height, pauseMenu.backgroundColor, false);
-		rect(x0, y0, pauseMenu.width, pauseMenu.height, pauseMenu.outlineColor, true);
+		rect(x0, y0, pauseMenu.width, pauseMenu.height, pauseMenu.backgroundColor, false, pauseMenu.alpha);
+		rect(x0, y0, pauseMenu.width, pauseMenu.height, pauseMenu.outlineColor, true, pauseMenu.alpha);
 	
 		var xx = window_get_width() / 2;
 		var yy = window_get_height() / 2;
@@ -218,17 +225,21 @@ drawPauseMenu = function() {
 		switch (pauseMenu.page) {
 		
 			case PM_PAGE.Home:
-			
+				
+				// Set button ids for gamepad
+				gp_menu(0, 1);
+				
 				// Paused header
 				draw_set_halign(fa_center);
 				draw_text(xx, top - 14, ts(13));
 	
 				button_gui(
 					xx, top + buttonSep, buttonWidth, buttonHeight,
-					ts(5), true, $181818, c_ltgray, 0.10, pauseMenu.alpha,
+					ts(5), 0, true, $181818, c_ltgray, 0.10, pauseMenu.alpha,
 					function(){
-						if (mouse_check_button_pressed(mb_left)) {
+						if (Keymap.select) {
 							pauseMenu.page = PM_PAGE.Settings;
+							GamepadMenuIndex = 0;
 						}
 						window_set_cursor(cr_handpoint);
 					}, BUTTON_ORIGIN.MiddleCenter
@@ -236,9 +247,9 @@ drawPauseMenu = function() {
 			
 				button_gui(
 					xx, top + 2 * buttonSep, buttonWidth, buttonHeight,
-					ts(14), true, $181818, c_ltgray, 0.10, pauseMenu.alpha,
+					ts(14), 1, true, $181818, c_ltgray, 0.10, pauseMenu.alpha,
 					function(){
-						if (mouse_check_button_pressed(mb_left)) {
+						if (Keymap.select) {
 							set_pause(false);
 						}
 						window_set_cursor(cr_handpoint);
@@ -248,13 +259,16 @@ drawPauseMenu = function() {
 				break;
 		
 			case PM_PAGE.Settings:
-			
+				
+				gp_menu(0, 8);
+				
 				button_gui(
 					xx, top, buttonWidth, buttonHeight,
-					ts(9), true, $181818, c_ltgray, 0.10, pauseMenu.alpha,
+					ts(9), 0, true, $181818, c_ltgray, 0.10, pauseMenu.alpha,
 					function(){
-						if (mouse_check_button_pressed(mb_left)) {
+						if (Keymap.select) {
 							pauseMenu.page = PM_PAGE.Home;
+							GamepadMenuIndex = 0;
 						}
 						window_set_cursor(cr_handpoint);
 					}, BUTTON_ORIGIN.MiddleCenter
@@ -270,10 +284,11 @@ drawPauseMenu = function() {
 			
 				// Audio settings
 				button_gui(
-					xx, top + 2 * buttonSep, buttonWidth, buttonHeight, ts(12),
+					xx, top + 2 * buttonSep, buttonWidth, buttonHeight, ts(12), 1,
 					true, $181818, c_ltgray, 0.1, pauseMenu.alpha, function(){
-						if (mouse_check_button_pressed(mb_left)) {
+						if (Keymap.select) {
 							pauseMenu.page = PM_PAGE.AudioSettings;
+							GamepadMenuIndex = 0;
 						}
 						window_set_cursor(cr_handpoint);
 					}, BUTTON_ORIGIN.MiddleCenter
@@ -283,9 +298,9 @@ drawPauseMenu = function() {
 				// GLOW EFFECT
 				button_gui(
 					x2, top + 3 * buttonSep, buttonWidth, buttonHeight,
-					ts(11)+": "+str_bool(layer_fx_is_enabled("Glowing_Particles")), true, $181818, c_ltgray, 0.10, pauseMenu.alpha,
+					ts(11)+": "+str_bool(layer_fx_is_enabled("Glowing_Particles")), 2, true, $181818, c_ltgray, 0.10, pauseMenu.alpha,
 					function(){
-						if (mouse_check_button_pressed(mb_left)) {
+						if (Keymap.select) {
 							var str = "Glowing_Particles";
 							
 							layer_enable_fx(
@@ -305,9 +320,9 @@ drawPauseMenu = function() {
 				// Language Selector
 				button_gui(
 					x2, top + 4 * buttonSep, buttonWidth, buttonHeight,
-					ts(19)+": "+ts(0), true, $181818, c_ltgray, 0.10, pauseMenu.alpha,
+					ts(19)+": "+ts(0), 3, true, $181818, c_ltgray, 0.10, pauseMenu.alpha,
 					function(){
-						if (mouse_check_button_pressed(mb_left)) {
+						if (Keymap.select) {
 							Settings.language ++;
 							if (Settings.language >= LANGUAGE.Count) Settings.language = 0;
 							
@@ -320,10 +335,11 @@ drawPauseMenu = function() {
 				// Device Settings
 				button_gui(
 					x2, top + 5 * buttonSep, buttonWidth, buttonHeight,
-					ts(20), true, $181818, c_ltgray, 0.10, pauseMenu.alpha,
+					ts(20), 4, true, $181818, c_ltgray, 0.10, pauseMenu.alpha,
 					function(){
-						if (mouse_check_button_pressed(mb_left)) {
+						if (Keymap.select) {
 							pauseMenu.page = PM_PAGE.DeviceSettings;
+							GamepadMenuIndex = 0;
 							
 							saveSettings();
 						}
@@ -340,9 +356,9 @@ drawPauseMenu = function() {
 				
 				button_gui(
 					xx - sliderOffset, top + 6 * buttonSep, buttonHeight, buttonHeight,
-					"<", true, $181818, c_ltgray, 0.10, pauseMenu.alpha,
+					"<", 6, true, $181818, c_ltgray, 0.10, pauseMenu.alpha,
 					function(){
-						if (mouse_check_button(mb_left) && Settings.maxParticlesOnScreen > 0) {
+						if (Keymap.selectHeld && Settings.maxParticlesOnScreen > 0) {
 							Settings.maxParticlesOnScreen --;
 						
 							saveSettings();
@@ -353,9 +369,9 @@ drawPauseMenu = function() {
 			
 				button_gui(
 					xx + sliderOffset, top + 6 * buttonSep, buttonHeight, buttonHeight,
-					">", true, $181818, c_ltgray, 0.10, pauseMenu.alpha,
+					">", 7, true, $181818, c_ltgray, 0.10, pauseMenu.alpha,
 					function(){
-						if (mouse_check_button(mb_left) && Settings.maxParticlesOnScreen < 5000) {
+						if (Keymap.selectHeld && Settings.maxParticlesOnScreen < 5000) {
 							Settings.maxParticlesOnScreen ++;
 						
 							saveSettings();
@@ -366,9 +382,9 @@ drawPauseMenu = function() {
 				
 				button_gui(	
 					xx - sliderOffset2, top + 6 * buttonSep, buttonHeight, buttonHeight,
-					"<<", true, $181818, c_ltgray, 0.10, pauseMenu.alpha,
+					"<<", 5, true, $181818, c_ltgray, 0.10, pauseMenu.alpha,
 					function(){
-						if (mouse_check_button(mb_left) && Settings.maxParticlesOnScreen > 5) {
+						if (Keymap.selectHeld && Settings.maxParticlesOnScreen > 5) {
 							Settings.maxParticlesOnScreen -= 5;
 						
 							saveSettings();
@@ -379,9 +395,9 @@ drawPauseMenu = function() {
 			
 				button_gui(
 					xx + sliderOffset2, top + 6 * buttonSep, buttonHeight, buttonHeight,
-					">>", true, $181818, c_ltgray, 0.10, pauseMenu.alpha,
+					">>", 8, true, $181818, c_ltgray, 0.10, pauseMenu.alpha,
 					function(){
-						if (mouse_check_button(mb_left) && Settings.maxParticlesOnScreen < 4995) {
+						if (Keymap.selectHeld && Settings.maxParticlesOnScreen < 4995) {
 							Settings.maxParticlesOnScreen += 5;
 						
 							saveSettings();
@@ -400,14 +416,16 @@ drawPauseMenu = function() {
 				break;
 		
 			case PM_PAGE.AudioSettings:
-			
-			
+				
+				gp_menu(0, 6);
+				
 				button_gui(
 					xx, top, buttonWidth, buttonHeight,
-					ts(9), true, $181818, c_ltgray, 0.10, pauseMenu.alpha,
+					ts(9), 0, true, $181818, c_ltgray, 0.10, pauseMenu.alpha,
 					function(){
-						if (mouse_check_button_pressed(mb_left)) {
+						if (Keymap.select) {
 							pauseMenu.page = PM_PAGE.Settings;
+							GamepadMenuIndex = 0;
 						}
 						window_set_cursor(cr_handpoint);
 					}, BUTTON_ORIGIN.MiddleCenter
@@ -417,9 +435,9 @@ drawPauseMenu = function() {
 				// Master
 				button_gui(
 					xx - sliderOffset, top + 2 * buttonSep, buttonHeight, buttonHeight,
-					"<", true, $181818, c_ltgray, 0.10, pauseMenu.alpha,
+					"<", 1, true, $181818, c_ltgray, 0.10, pauseMenu.alpha,
 					function(){
-						if (mouse_check_button(mb_left) && Settings.volume.master > 0) {
+						if (Keymap.selectHeld && Settings.volume.master > 0) {
 							Settings.volume.master -= 0.01;
 						
 							saveSettings();
@@ -430,9 +448,9 @@ drawPauseMenu = function() {
 			
 				button_gui(
 					xx + sliderOffset, top + 2 * buttonSep, buttonHeight, buttonHeight,
-					">", true, $181818, c_ltgray, 0.10, pauseMenu.alpha,
+					">", 2, true, $181818, c_ltgray, 0.10, pauseMenu.alpha,
 					function(){
-						if (mouse_check_button(mb_left) && Settings.volume.master < 1) {
+						if (Keymap.selectHeld && Settings.volume.master < 1) {
 							Settings.volume.master += 0.01;
 						
 							saveSettings();
@@ -448,9 +466,9 @@ drawPauseMenu = function() {
 				// Music
 				button_gui(
 					xx - sliderOffset, top + 3 * buttonSep, buttonHeight, buttonHeight,
-					"<", true, $181818, c_ltgray, 0.10, pauseMenu.alpha,
+					"<", 3, true, $181818, c_ltgray, 0.10, pauseMenu.alpha,
 					function(){
-						if (mouse_check_button(mb_left) && Settings.volume.music > 0) {
+						if (Keymap.selectHeld && Settings.volume.music > 0) {
 							Settings.volume.music -= 0.01;
 						
 							saveSettings();
@@ -461,9 +479,9 @@ drawPauseMenu = function() {
 			
 				button_gui(
 					xx + sliderOffset, top + 3 * buttonSep, buttonHeight, buttonHeight,
-					">", true, $181818, c_ltgray, 0.10, pauseMenu.alpha,
+					">", 4, true, $181818, c_ltgray, 0.10, pauseMenu.alpha,
 					function(){
-						if (mouse_check_button(mb_left) && Settings.volume.music < 1) {
+						if (Keymap.selectHeld && Settings.volume.music < 1) {
 							Settings.volume.music += 0.01;
 						
 							saveSettings();
@@ -480,9 +498,9 @@ drawPauseMenu = function() {
 				// Effects
 				button_gui(
 					xx - sliderOffset, top + 4 * buttonSep, buttonHeight, buttonHeight,
-					"<", true, $181818, c_ltgray, 0.10, pauseMenu.alpha,
+					"<", 5, true, $181818, c_ltgray, 0.10, pauseMenu.alpha,
 					function(){
-						if (mouse_check_button(mb_left) && Settings.volume.effects > 0.01) {
+						if (Keymap.selectHeld && Settings.volume.effects > 0.01) {
 							Settings.volume.effects -= 0.01;
 						
 							saveSettings();
@@ -493,9 +511,9 @@ drawPauseMenu = function() {
 			
 				button_gui(
 					xx + sliderOffset, top + 4 * buttonSep, buttonHeight, buttonHeight,
-					">", true, $181818, c_ltgray, 0.10, pauseMenu.alpha,
+					">", 6, true, $181818, c_ltgray, 0.10, pauseMenu.alpha,
 					function(){
-						if (mouse_check_button(mb_left) && Settings.volume.effects < 1) {
+						if (Keymap.selectHeld && Settings.volume.effects < 1) {
 							Settings.volume.effects += 0.01;
 						
 							saveSettings();
@@ -515,12 +533,15 @@ drawPauseMenu = function() {
 		
 			case PM_PAGE.DeviceSettings:
 				
+				gp_menu(0, 3);
+				
 				button_gui(
 					xx, top, buttonWidth, buttonHeight,
-					ts(9), true, $181818, c_ltgray, 0.10, pauseMenu.alpha,
+					ts(9), 0, true, $181818, c_ltgray, 0.10, pauseMenu.alpha,
 					function(){
-						if (mouse_check_button_pressed(mb_left)) {
+						if (Keymap.select) {
 							pauseMenu.page = PM_PAGE.Settings;
+							GamepadMenuIndex = 0;
 						}
 						window_set_cursor(cr_handpoint);
 					}, BUTTON_ORIGIN.MiddleCenter
@@ -530,10 +551,10 @@ drawPauseMenu = function() {
 				// Find Gamepad
 				button_gui(
 					xx, top + 2 * buttonSep, buttonWidth, buttonHeight,
-					ts(21)+": "+GamepadWasFound, true, $181818, c_ltgray, 0.10, pauseMenu.alpha,
+					ts(21) + ": " + GamepadWasFound, 1, true, $181818, c_ltgray, 0.10, pauseMenu.alpha,
 					function(){
-						if (mouse_check_button_pressed(mb_left)) {
-							findGamepad(true);
+						if (Keymap.select) {
+							findGamepad();
 							saveSettings();
 						}
 						window_set_cursor(cr_handpoint);
@@ -544,9 +565,9 @@ drawPauseMenu = function() {
 				// Set gamepad deadzone
 				button_gui(
 					xx - sliderOffset, top + 3 * buttonSep, buttonHeight, buttonHeight,
-					"<", true, $181818, c_ltgray, 0.10, pauseMenu.alpha,
+					"<", 2, true, $181818, c_ltgray, 0.10, pauseMenu.alpha,
 					function(){
-						if (mouse_check_button(mb_left) && Settings.gamepad.deadzone > 0) {
+						if (Keymap.selectHeld && Settings.gamepad.deadzone > 0) {
 							Settings.gamepad.deadzone -= 0.005;
 							gamepad_set_axis_deadzone(Gamepad, Settings.gamepad.deadzone);
 							
@@ -558,9 +579,9 @@ drawPauseMenu = function() {
 			
 				button_gui(
 					xx + sliderOffset, top + 3 * buttonSep, buttonHeight, buttonHeight,
-					">", true, $181818, c_ltgray, 0.10, pauseMenu.alpha,
+					">", 3, true, $181818, c_ltgray, 0.10, pauseMenu.alpha,
 					function(){
-						if (mouse_check_button(mb_left) && Settings.gamepad.deadzone < 1) {
+						if (Keymap.selectHeld && Settings.gamepad.deadzone < 1) {
 							Settings.gamepad.deadzone += 0.005;
 							gamepad_set_axis_deadzone(Gamepad, Settings.gamepad.deadzone);
 						
@@ -571,11 +592,10 @@ drawPauseMenu = function() {
 				);
 				
 				draw_set_halign(fa_center);
-				draw_text_color(xx, top + 3 * buttonSep, ts(21)+": "+string(Settings.gamepad.deadzone), c_white, c_white, c_white, c_white, pauseMenu.alpha);
-			
+				draw_text_color(xx, top + 3 * buttonSep, ts(22)+": "+string(Settings.gamepad.deadzone), c_white, c_white, c_white, c_white, pauseMenu.alpha);
 			
 				break;
-		
+				
 		}
 	
 		draw_set_alpha(1);
@@ -583,10 +603,86 @@ drawPauseMenu = function() {
 }
 
 
-// For testing
+// Debugging
 Debug = true;
+
+logs = [];
+
+
+runCommand = function(input) {
+	if (input == "") return;
+	
+	var args = string_split(input, " ", true);
+	array_delete(args, 0, 1);
+	
+	var found = false;
+	
+	log(input);
+	
+	for (var i = 0; i < array_length(CommandData); i++) {
+		if (string_starts_with(input, CommandData[i].name)) {
+			CommandData[i].fn(args);
+			found = true;
+		}
+	}
+	
+	if (!found) {
+		log("Invalid command!");
+	}
+}
+
+drawConsole = function() {
+	if (!Console) return;
+	
+	var input = keyboard_string;
+	
+	if (keyboard_check_pressed(vk_enter)) {
+		runCommand(input);
+		keyboard_string = "";
+	}
+	
+	
+	// Draw the actual console
+	var width = 500;
+	var height = 400;
+	var c0 = c_black;
+	var c1 = c_dkgray;
+	
+	draw_set_alpha(0.5);
+	
+	draw_rectangle_color(
+		window_get_width() - width, 200, window_get_width(), 200 + height, 
+		c0, c0, c0, c0, false
+	);
+	
+	draw_set_alpha(1);
+	
+	draw_rectangle_color(
+		window_get_width() - width, 200, window_get_width(), 200 + height, 
+		c1, c1, c1, c1, true
+	);
+	
+	draw_set_halign(fa_left);
+	
+	// Draw logs
+	for (var i = 0; i < array_length(logs); i++) {
+		var sep = 12;
+		draw_text(window_get_width() - width + 5, (150 + height) - i * sep, logs[i]);
+	}
+	
+	draw_text(window_get_width() - width + 5, 180 + height, "> " + input);
+	
+	draw_set_halign(fa_center);
+	
+	var scale = 0.16;
+	var yy = 201;
+	draw_sprite_ext(sKitty, 0, window_get_width(), yy + height, scale, scale, 0, c_white, 1);
+	draw_sprite_ext(sKitty3, 0, window_get_width() - (sprite_get_width(sKitty) * scale), yy + height, scale, scale, 0, c_white, 1);
+	draw_sprite_ext(sKitty2_1, 0, window_get_width() - (sprite_get_width(sKitty3) * scale), yy + height, scale, scale, 0, c_white, 1);
+	
+}
 
 
 //set_planet(instance_nearest(x, y, Planet).components);
 
-deviceColor = 0;
+
