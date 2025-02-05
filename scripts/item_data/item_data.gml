@@ -88,7 +88,7 @@ function item_data(){
 	add(ITEM.BasicInventory,	new item(ITEM_TYPE.Inventory,			"basic inventory",			-1,						{}));
 	
 	// Radars
-	add(ITEM.BasicRadar,	new item(ITEM_TYPE.Radar,							"basic Radar",					-1,
+	add(ITEM.BasicRadar,	new item(ITEM_TYPE.Radar,							"basic radar",					-1,
 	{
 		track: [Planet, Sun],
 		radius: 200,

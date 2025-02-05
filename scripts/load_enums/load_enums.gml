@@ -50,7 +50,6 @@ enum PLANET_TYPE {
 	Count,
 }
 
-
 enum TILE_TYPE {
 	Solid,
 	Liquid,
@@ -59,12 +58,5 @@ enum TILE_TYPE {
 enum TILE {
 	Arid1,
 }
-
-
-
-
-
-
-
 
 }

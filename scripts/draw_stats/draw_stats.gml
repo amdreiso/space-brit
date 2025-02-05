@@ -56,7 +56,7 @@ function draw_stats(){
 	draw_text(0, 4 * sep, $"{fps} fps");
 	draw_text(0, 5 * sep, $"x: { player.x} y: { player.y}");
 	draw_text(0, 6 * sep, $"cx: { Camera.x} cy: { Camera.y}");
-	draw_text(0, 7 * sep, $"p: { instance_number(Particle)} o: { instance_number(all)}");
+	draw_text(0, 7 * sep, $"p: { ParticleCount } o: { instance_number(all) - ParticleCount }");
 	draw_text(0, 8 * sep, $"axislh: { gamepad_axis_value(Gamepad, gp_axislh)} axislv: { gamepad_axis_value(Gamepad, gp_axislv)}");
 	draw_text(0, 9 * sep, $"axisrh: { gamepad_axis_value(Gamepad, gp_axisrh)} axisrv: { gamepad_axis_value(Gamepad, gp_axisrv)}");
 	draw_text(0, 10 * sep, $"controller: {Controller} | gpMenuIndex: {GamepadMenuIndex}");

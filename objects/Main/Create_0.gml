@@ -607,9 +607,9 @@ drawPauseMenu = function() {
 Debug = true;
 
 logs = [];
+logRewind = -1;
 
-
-runCommand = function(input) {
+runCommand = function(input, showHistory = false) {
 	if (input == "") return;
 	
 	var args = string_split(input, " ", true);
@@ -617,10 +617,20 @@ runCommand = function(input) {
 	
 	var found = false;
 	
-	log(input);
+	if (showHistory)
+		log("- "+input);
 	
+	// Run Actual Command
 	for (var i = 0; i < array_length(CommandData); i++) {
-		if (string_starts_with(input, CommandData[i].name)) {
+		if (string_starts_with(string_lower(input), CommandData[i].name)) {
+			var argc = CommandData[i].argc;
+			var argl = array_length(args);
+			
+			if (argc != argl) {
+				log($"Missing arguments.");
+				return;
+			}
+			
 			CommandData[i].fn(args);
 			found = true;
 		}
@@ -637,18 +647,17 @@ drawConsole = function() {
 	var input = keyboard_string;
 	
 	if (keyboard_check_pressed(vk_enter)) {
-		runCommand(input);
+		runCommand(input, true);
 		keyboard_string = "";
 	}
 	
-	
 	// Draw the actual console
-	var width = 500;
+	var width = 700;
 	var height = 400;
-	var c0 = c_black;
-	var c1 = c_dkgray;
+	var c0 = $080808;
+	var c1 = c_gray;
 	
-	draw_set_alpha(0.5);
+	draw_set_alpha(0.99);
 	
 	draw_rectangle_color(
 		window_get_width() - width, 200, window_get_width(), 200 + height, 
@@ -666,21 +675,30 @@ drawConsole = function() {
 	
 	// Draw logs
 	for (var i = 0; i < array_length(logs); i++) {
-		var sep = 12;
-		draw_text(window_get_width() - width + 5, (150 + height) - i * sep, logs[i]);
+		var sep = 14;
+	
+		draw_set_font(logs[i].font);
+		
+		draw_text_color(window_get_width() - width + 5, (150 + height) - i * sep, logs[i].str, logs[i].color, logs[i].color, logs[i].color, logs[i].color, 1);
 	}
 	
+	draw_set_font(fnt_console);
+		
 	draw_text(window_get_width() - width + 5, 180 + height, "> " + input);
 	
+	draw_set_font(fnt_main);
 	draw_set_halign(fa_center);
 	
-	var scale = 0.16;
+	var scale = 0.10;
 	var yy = 201;
+	
+	// KITTIESSSS
 	draw_sprite_ext(sKitty, 0, window_get_width(), yy + height, scale, scale, 0, c_white, 1);
 	draw_sprite_ext(sKitty3, 0, window_get_width() - (sprite_get_width(sKitty) * scale), yy + height, scale, scale, 0, c_white, 1);
 	draw_sprite_ext(sKitty2_1, 0, window_get_width() - (sprite_get_width(sKitty3) * scale), yy + height, scale, scale, 0, c_white, 1);
-	
 }
+
+runCommand("start");
 
 
 //set_planet(instance_nearest(x, y, Planet).components);

@@ -1,7 +1,7 @@
 function get_keymap(){
 	return {
 		forward: (keyboard_check(ord("W")) || gamepad_button_check(Gamepad, gp_shoulderrb)),
-		left: (keyboard_check(ord("A")) || gamepad_axis_value(Gamepad, gp_axislh) < -0),
+		left: (keyboard_check(ord("A")) || gamepad_axis_value(Gamepad, gp_axislh) < 0),
 		right: (keyboard_check(ord("D")) || gamepad_axis_value(Gamepad, gp_axislh) > 0),
 		
 		attack: (keyboard_check_pressed(vk_space) || gamepad_button_check_pressed(Gamepad, gp_shoulderr)),
@@ -13,8 +13,8 @@ function get_keymap(){
 		
 		debug: (keyboard_check_pressed(vk_f3) || gamepad_button_check_pressed(Gamepad, gp_select)),
 		
-		leftAim: (gamepad_axis_value(Gamepad, gp_axisrh) < -0.25),
-		rightAim: (gamepad_axis_value(Gamepad, gp_axisrh) > 0.25),
+		leftAim: (gamepad_axis_value(Gamepad, gp_axisrh) < 0),
+		rightAim: (gamepad_axis_value(Gamepad, gp_axisrh) > 0),
 		
 		padu: (gamepad_button_check(Gamepad, gp_padu)),
 		padl: (gamepad_button_check(Gamepad, gp_padl)),
