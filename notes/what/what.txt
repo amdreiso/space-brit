@@ -1,11 +1,18 @@
 
 
+TODO:
+- Enemies
+
+
+DONE: 
+
+
+
 Planet creation:
 
 - Planet type: rocky, sandy, muddy idk
 - A tile set for each type
 - Coloring the tileset using the same planet shader
 - Planets will have a Dark Side, Where aliens will go fucking rogue
-- 
 
 

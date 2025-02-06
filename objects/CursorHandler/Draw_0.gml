@@ -1,5 +1,4 @@
 
-
 depth = 999999;
 
 if (!Paused) depth = -9999999;

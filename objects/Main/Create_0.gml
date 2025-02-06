@@ -70,6 +70,11 @@ settings();
 
 // Gameplay
 player = instance_create_layer(10000, 13000, "Spaceship", Spaceship);
+instance_create_layer(10000, 12800, "Spaceship", Enemy);
+instance_create_layer(10000, 12800, "Spaceship", Enemy);
+instance_create_layer(10000, 12800, "Spaceship", Enemy);
+instance_create_layer(10000, 12800, "Spaceship", Enemy);
+instance_create_layer(10000, 12800, "Spaceship", Enemy);
 instance_create_layer(10000, 13000, "Spaceship", Camera);
 instance_create_layer(0, 0, "Spaceship", MusicHandler);
 instance_create_layer(0, 0, "Spaceship", OuterSpace);
@@ -102,7 +107,7 @@ repeat (50) {
 		self.image_speed = 0;
 		self.image_index = irandom(2);
 		
-		self.scale = random(0.08) / 1.5;
+		self.scale = random(2.5) * 1.5;
 		
 		var val = self.depthFactor + 0.25;
 		var starRGB = choose(
