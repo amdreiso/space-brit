@@ -29,8 +29,8 @@
   "nineSlice":null,
   "origin":9,
   "parent":{
-    "name":"Spaceship",
-    "path":"folders/Sprites/Spaceship.yy",
+    "name":"BasicTurret",
+    "path":"folders/Sprites/Items/Turrets/BasicTurret.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",

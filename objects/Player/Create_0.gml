@@ -10,7 +10,7 @@ defaultSpd = 0.67;
 spd = defaultSpd;
 hsp = 0;
 vsp = 0;
-force = new vec2();
+force = vec2();
 
 isJumping = false;
 jumpTick = 0;
@@ -109,7 +109,7 @@ spriteState = {
 	move: sPlayerMove,
 }
 
-spriteDirection = new vec2(1, 1);
+spriteDirection = vec2(1, 1);
 
 scale = 1;
 

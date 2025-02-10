@@ -4,7 +4,7 @@ function get_keymap(){
 		left: (keyboard_check(ord("A")) || gamepad_axis_value(Gamepad, gp_axislh) < 0),
 		right: (keyboard_check(ord("D")) || gamepad_axis_value(Gamepad, gp_axislh) > 0),
 		
-		attack: (keyboard_check_pressed(vk_space) || gamepad_button_check_pressed(Gamepad, gp_shoulderr)),
+		attack: (keyboard_check(vk_space) || gamepad_button_check(Gamepad, gp_shoulderr)),
 		menu: (keyboard_check_pressed(ord("E")) || gamepad_button_check_pressed(Gamepad, gp_face4)),
 		
 		start: (keyboard_check_pressed(vk_escape) || gamepad_button_check_pressed(Gamepad, gp_start)),

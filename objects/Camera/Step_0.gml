@@ -2,6 +2,7 @@
 if (target == noone) return;
 
 
+
 if (shakeValue > 0) shakeValue = lerp(shakeValue, 0, 0.1);
 
 var shake = power(shakeValue, shakePower);
@@ -18,6 +19,14 @@ camera_set_view_size(cam, defaultSize.width * zoomLerp, defaultSize.height * zoo
 
 camera_set_view_pos(cam, x - (size.width * zoomLerp) / 2, y - (size.height * zoomLerp) / 2);
 
+zoomLerp = lerp(zoomLerp, zoom, 0.1);
+
+if (Spaceship.dead) {
+	zoom += 0.001;
+	return;
+}
+
+
 var zoomValue = 0.1;
 
 if (keyboard_check(vk_shift)) {
@@ -29,4 +38,3 @@ var map = get_keymap();
 zoom += (mouse_wheel_down() || Keymap.padl)									? zoomValue : 0;
 zoom -= (mouse_wheel_up() || Keymap.padr && zoom > 0)				? zoomValue : 0;
 
-zoomLerp = lerp(zoomLerp, zoom, 0.1);

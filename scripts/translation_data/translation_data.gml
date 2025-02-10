@@ -32,6 +32,9 @@ TranslationData[LANGUAGE.English, 19] = "Language";
 TranslationData[LANGUAGE.English, 20] = "Device Settings";
 TranslationData[LANGUAGE.English, 21] = "Find Gamepad";
 TranslationData[LANGUAGE.English, 22] = "Gamepad Deadzone";
+TranslationData[LANGUAGE.English, 23] = "End of Journey";
+TranslationData[LANGUAGE.English, 24] = "Restart";
+TranslationData[LANGUAGE.English, 25] = "Quit";
 
 #endregion
 

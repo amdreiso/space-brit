@@ -7,11 +7,15 @@ enum BUTTON_ORIGIN {
 
 
 function fovy(){
-	show_debug_message("Loaded FOVY!");
+	show_debug_message("Loaded fovy!");
 }
 
-
-function vec2(x=0, y=0) constructor {self.x=x; self.y=y}
+function vec2(x=0, y=0) {
+	return {
+		x: x,
+		y: y,
+	}
+}
 
 function dim(width=0, height=0) constructor {self.width=width; self.height=height}
 
@@ -249,9 +253,9 @@ function draw_3d(step, x, y, sprite, xscale, yscale, angle = 0, color = c_white,
 		
 		if (smoothing) {
 			c = make_color_rgb(
-				smoothOffset + i * smoothStep,
-				smoothOffset + i * smoothStep,
-				smoothOffset + i * smoothStep
+				color_get_red(color) + smoothOffset + i * smoothStep,
+				color_get_green(color) + smoothOffset + i * smoothStep,
+				color_get_blue(color) + smoothOffset + i * smoothStep
 			);
 		}
 		
@@ -408,7 +412,7 @@ function slider(val, x, y, width, height, handleWidth, color = c_white) {
 	
 	draw_line_color(x - width/2, y, x + width/2, y, color, color);
 	
-	button_gui(handleX, y, handleWidth, height, "", true, color, c_white, 1, 1, function(){
+	button_gui(handleX, y, handleWidth, height, "", -1, true, color, c_white, 1, 1, function(){
 		if (mouse_check_button(mb_left)) {
 			var mx = window_mouse_get_x();
 			var my = window_mouse_get_y();
@@ -417,7 +421,7 @@ function slider(val, x, y, width, height, handleWidth, color = c_white) {
 			
 			return (pos);
 		}
-	});
+	}, BUTTON_ORIGIN.MiddleCenter);
 	
 }
 

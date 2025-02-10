@@ -2,6 +2,6 @@
 if (room != rmOuterSpace) return;
 
 // Draw self
-drawSpaceship();
+draw();
 
 sprite_index = spaceshipSprite;

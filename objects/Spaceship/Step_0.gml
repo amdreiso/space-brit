@@ -3,7 +3,11 @@ if (room != rmOuterSpace) return;
 
 
 // Check if spaceship is USABLE
-busy = (Paused || Console);
+busy = (Paused || Console || dead);
+
+
+// Health
+if (hitCooldown > 0) hitCooldown -= GameSpeed;
 
 
 // Movement
@@ -19,7 +23,7 @@ audio_listener_position(x, y, 0);
 
 
 if (keyboard_check(ord("F"))) {
-	inventoryAdd(choose(ITEM.Coal, ITEM.RawIron, ITEM.Iron));
+	inventoryAdd(irandom(ITEM.Count - 1));
 }
 
 

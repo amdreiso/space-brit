@@ -83,8 +83,29 @@ add(command("spaceship_add_item", 2, function(args) {
 	}
 }));
 
+add(command("die", 0, function(args) {
+	if (!instance_exists(get_player())) {
+		log($"{object_get_name(get_player())} doesn't exist");
+		return;
+	}
+	
+	get_player().hp = 0;
+	get_player().dead = true;
+}));
+
 add(command("clear", 0, function(args) {
 	Main.logs = [];
+}));
+
+add(command("planet", 0, function(args) {
+	if (!instance_exists(Planet)) {
+		log("There are no planets loaded");
+		return;
+	}
+	
+	set_planet(
+		instance_nearest(x, y, Planet).components, vec2(0, 0)
+	);
 }));
 
 

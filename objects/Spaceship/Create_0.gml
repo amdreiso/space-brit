@@ -4,12 +4,98 @@ busy = false;
 
 
 // Health
-hp = 1000;
+maxHp = 1000;
+hp = maxHp;
+isHit = false;
+hitCooldown = 0;
+hitAlpha = 0;
+
+dead = false;
+deadMenuAlpha = 0;
+
+hit = function(damage, obj, recoil = 0, spin = 0) {
+	if (hitCooldown > 0) return;
+	
+	isHit = true;
+	hp -= damage;
+	
+	hitCooldown = 10;
+	hitAlpha = 0.3;
+	
+	dead = (hp <= 0);
+	
+	if (dead) audio_stop_all();
+	
+	// THE ART OF CAMERA SHAKE TAUGHT ME THIS SHAKE THAT THING
+	sound3D(emitter, x, y, snd_hit1, false, 0.24 * get_volume(AUDIO.Effects), random_range(0.85, 1.00));
+	camera_shake(17, 1);
+	
+	// Spin LMAO
+	spinForce = spin;
+	
+	// Recoil
+	var dir = point_direction(x, y, obj.x, obj.y);
+	force.x -= lengthdir_x(recoil, dir);
+	force.y -= lengthdir_y(recoil, dir);
+	
+	// Play malfunction sfx
+	if (irandom(10) > 8) 
+		audio_play_sound(snd_death1, 0, false, 0.15 * get_volume(AUDIO.Effects), 0, 0.70);
+}
+
+drawDeadMenu = function() {
+	if (!dead) return;
+	
+	var w = window_get_width();
+	var h = window_get_height();
+	
+	
+	deadMenuAlpha = lerp(deadMenuAlpha, 0.95, 0.01);
+	
+	
+	draw_set_alpha(deadMenuAlpha);
+	
+	draw_rectangle_color(
+		0, 0, w, h,
+		c_black, c_black, c_black, c_black, false
+	);
+	
+	draw_set_halign(fa_center);
+	draw_set_valign(fa_middle);
+	
+	draw_set_font(fnt_mainTIP);
+	draw_text(w/2, h/2, ts(23));
+	
+	draw_set_font(fnt_main);
+	
+	var buttonOffset = 250;
+	var buttonWidth = 60;
+	var buttonHeight = 20;
+	var buttonY = (h / 1.75);
+	
+	gp_menu(0, 1);
+	
+	// Restart	
+	button_gui((w/2) - buttonOffset, buttonY, buttonWidth, buttonHeight, ts(24), 0, true, $181818, c_ltgray, 0.5, deadMenuAlpha, function(){
+		if (Keymap.select) {
+			game_restart();
+		}
+	}, BUTTON_ORIGIN.MiddleCenter);
+	
+	// Quit
+	button_gui((w/2) + buttonOffset, buttonY, buttonWidth, buttonHeight, ts(25), 1, true, $181818, c_ltgray, 0.5, deadMenuAlpha, function(){
+		if (Keymap.select) {
+			game_end();
+		}
+	}, BUTTON_ORIGIN.MiddleCenter);
+	
+	draw_set_alpha(1);
+}
 
 
 // Components
 propellerID					= ITEM.BasicPropeller;
-turretID						= ITEM.BasicTurret;
+turretID						= ITEM.AutomaticTurret;
 inventoryID					= ITEM.BasicInventory;
 radarID							= ITEM.BasicRadar;
 
@@ -19,7 +105,8 @@ spd = 0;
 hsp = 0;
 vsp = 0;
 
-force = new vec2();
+force = vec2();
+spinForce = 0;
 
 turn = 0;
 turnForce = 10;
@@ -33,9 +120,8 @@ turnSpeed = 0.2;
 
 mouseAngle = 0;
 
-
-fuel = 1;
-
+maxFuel = 1000;
+fuel = maxFuel;
 
 distanceToSun = 0;
 distanceToSunOffset = 0;
@@ -53,6 +139,7 @@ handleMovement = function() {
 
 	force.x = lerp(force.x, 0, 0.02);
 	force.y = lerp(force.y, 0, 0.02);
+	spinForce = lerp(spinForce, 0, 0.08);
 
 	// Mouse angle wow
 	mouseAngle = point_direction(x, y, mouse_x, mouse_y);
@@ -76,13 +163,18 @@ handleMovement = function() {
 		turn = lerp(turn, 0, 0.1);
 		
 	}
-
+	
+	turn += spinForce;
+	
 	turn = clamp(turn, -maxTurnSpeed, maxTurnSpeed);
 	
 	// Move Forward
-	if (map.forward) {
+	if (map.forward && fuel > 0) {
+		var propeller = ItemData[? propellerID];
 		
-		spd += acceleration;
+		fuel -= propeller.components.fuelConsumption;
+		
+		spd += propeller.components.acceleration;
 		spd = clamp(spd, 0, maxSpeed);
 		var offset = 10;
 		var range = 4;
@@ -145,6 +237,8 @@ handleMovement = function() {
 
 
 calculateSunProximity = function() {
+	if (busy) return;
+	
 	var sun = instance_nearest(x, y, Sun);
 	
 	// If spaceship is in suns radius
@@ -205,25 +299,10 @@ handleAttack = function() {
 		
 		var spaceBetween = 4;
 		
-		var offset_x = lengthdir_x(spaceBetween, direction + 90);
-		var offset_y = lengthdir_y(spaceBetween, direction + 90);
-		
-		
-		with (instance_create_depth(x + offset_x, y + offset_y, depth+10, SpaceshipProjectile)) {
-			self.sprite_index = sProjectile1;
-			self.direction = other.turretAngle;
-			self.speed = 9;
-		}
-		
-		with (instance_create_depth(x - offset_x, y - offset_y, depth+10, SpaceshipProjectile)) {
-			self.sprite_index = sProjectile1;
-			self.direction = other.turretAngle;
-			self.speed = 9;
-		}
-		
+		turret.components.shoot(self);
 		
 		camera_shake(0.75);
-		shootingCooldown = 10;
+		shootingCooldown = turret.components.shootCooldown;
 		
 		audio_play_sound(snd_shoot, 0, false, 0.10 * get_volume(AUDIO.Effects), 0);
 		
@@ -254,6 +333,8 @@ tipAlpha = 0;
 // GUI
 sunAlpha = 0;
 beepInterval = 0;
+
+
 
 
 // Inventory
@@ -304,13 +385,14 @@ inventoryButtonClick = function() {
 spaceshipSprite = sSpaceship;
 turretSprite = sTurret;
 
-drawSpaceship = function() {
+draw = function() {
 	var s = 1;
-
+	var turret = ItemData[? turretID];
+	
 	if (shootingCooldown > 0) {
-		turretSprite = sTurretCooldown;
+		turretSprite = turret.components.spriteCooldown;
 	} else {
-		turretSprite = sTurret;
+		turretSprite = turret.components.sprite;
 	}
 	
 	// turret points to cursor
@@ -381,6 +463,8 @@ menuDrawReturnButton = function(x, y, width) {
 }
 
 
+radarZoom = 1;
+
 drawMenu = function() {
 	var map = get_keymap();
 	
@@ -432,7 +516,7 @@ drawMenu = function() {
 		
 		case SPACESHIP_MENU_PAGE.Home:
 			
-			gp_menu(0, 3);
+			gp_menu(0, 5);
 			
 			var modelScale = 3;
 			var modelY = top + 70;
@@ -528,38 +612,62 @@ drawMenu = function() {
 			var radarSize = 1.25;
 			var radarX = xx;
 			var radarY = yy + menuSize.height / 4;
-			var radarRadius = radar.components.radius;
+			var radarRadius = radar.components.radius / radarZoom;
+			var radarSprite = radar.components.sprite;
 			
-			draw_sprite_ext(radar.components.sprite, 0, radarX, radarY, radarSize, radarSize, 0, c_white, menuAlpha);
+			draw_sprite_ext(radarSprite, 0, radarX, radarY, radarSize, radarSize, 0, c_white, menuAlpha);
 			
 			// Draw dots
 			for (var i = 0; i < array_length(radar.components.track); i++) {
+				var track = radar.components.track[i];
 				
 				// Iterate through every object in the track array and draw them on the radar
-				for (var j = 0; j < instance_number(radar.components.track[i]); j++) {
-					var inst = instance_find(radar.components.track[i], j);
+				for (var j = 0; j < instance_number(track.obj); j++) {
+					var inst = instance_find(track.obj, j);
 					var distance = distance_to_object(inst);
 					
 					// hardcoded garbage. works tho
 					if (distance < (15500) * (radarRadius / (200))) {
 						var divider = sprite_get_width(radar.components.sprite) * radarSize;
-						var pos = new vec2(
+						var pos = vec2(
 							inst.x / radarRadius - x / radarRadius,
 							inst.y / radarRadius - y / radarRadius
 						);
 						
-						var color = c_lime;
+						var color = track.color;
 						
 						draw_set_alpha(menuAlpha);
 						
 						draw_circle_color(
-							radarX + pos.x, radarY + pos.y, 3,
+							radarX + pos.x, radarY + pos.y, 3 - (radarZoom / 2),
 							color, color, false
 						);	
 					}	
 				}
-				
 			}
+			
+			var radarButtonOffset = sprite_get_width(radarSprite) / 1.25;
+			var radarButtonSize = 16;
+			
+			button_gui(
+				radarX - radarButtonOffset, radarY, radarButtonSize, radarButtonSize, "<", 4, true, $181818, c_ltgray, 0.5, menuAlpha, function(){
+					if (Keymap.selectHeld && radarZoom < 15) {
+						radarZoom += 0.1;
+					}
+				}, BUTTON_ORIGIN.MiddleCenter
+			);
+			
+			button_gui(
+				radarX + radarButtonOffset, radarY, radarButtonSize, radarButtonSize, ">", 5, true, $181818, c_ltgray, 0.5, menuAlpha, function(){
+					if (Keymap.selectHeld && radarZoom > 1) {
+						radarZoom -= 0.1;
+					}
+				}, BUTTON_ORIGIN.MiddleCenter
+			);
+			
+			draw_set_halign(fa_center);
+			
+			draw_text_color(radarX, radarY + 100, $"zoom: {radarZoom}x", c_white, c_white, c_white, c_white, menuAlpha);
 			
 			draw_circle_color(
 				radarX, radarY, 2,
@@ -567,25 +675,6 @@ drawMenu = function() {
 			);
 			
 			draw_set_alpha(1);
-			
-			/*
-			
-			for (var j = 0; j < instance_number(MinionHut); j++) {
-				var obj = instance_find(MinionHut, j);
-		
-				if (distance_to_object(obj) < mapDrawDistance) {
-					var objX = obj.x/mapAmp - x/mapAmp;
-					var objY = obj.y/mapAmp - y/mapAmp;
-			
-					circle_button(mapPlayerX+objX, mapPlayerY+objY, 5, c2, c4, function(){
-						draw_set_halign(fa_left);
-						draw_text_transformed_color(mouse_x+20, mouse_y, "Shrine", .25, .25, 0, c1, c2, c3, c4, 1);
-						draw_set_halign(fa_center);
-					});
-				}
-			}
-			
-			*/
 			
 			break;
 		
@@ -666,13 +755,14 @@ drawMenu = function() {
 				
 				var itemID = inventory[i].itemID;
 				
+				
 				if (itemID != -1) {
 					itemSpr = ItemData[? itemID].sprite;
 					
-					if (itemSpr != -1) {
-						var sprScale = 1.5;
-						draw_sprite_ext(itemSpr, -1, slotX, slotY, sprScale, sprScale, 0, c_white, menuAlpha);
-					}
+					if (ItemData[? itemID].sprite == -1) itemSpr = sDefault;
+					
+					var sprScale = 1.5;
+					draw_sprite_ext(itemSpr, -1, slotX, slotY, sprScale, sprScale, 0, c_white, menuAlpha);
 				}
 				
 				if (selectedSlot != -1 && inventory[selectedSlot].itemID != -1) {
@@ -803,8 +893,8 @@ drawMenu = function() {
 			}
 			
 			if (selectedSlot != -1 && inventoryGrab.itemID == -1) {
-				var offset = new vec2(20, -10);
-				var shadowOffset = new vec2(-1.5, 1.5);
+				var offset = vec2(20, -10);
+				var shadowOffset = vec2(-1.5, 1.5);
 				
 				draw_text_color(
 					window_mouse_get_x() + offset.x + shadowOffset.x,
@@ -836,6 +926,35 @@ drawMenu = function() {
 			gp_menu(0, 0);
 			
 			menuDrawReturnButton(xx, top + 14, ww);
+			
+			var meterWidth = 18;
+			var meterHeight = 200;
+			
+			var values = [
+				{
+					min: other.hp,
+					max: other.maxHp,
+					minColor: c_red,
+					maxColor: c_green,
+				},
+				{
+					min: other.fuel,
+					max: other.maxFuel,
+					minColor: c_red,
+					maxColor: c_dkgray,
+				},
+			];
+			
+			draw_set_alpha(menuAlpha);
+			
+			for (var i = 0; i < array_length(values); i++) {
+				var meter = (values[i].min / values[i].max) * 100;
+				var meterX = (xx + (i-i/2) * (meterWidth * 2.5));
+				
+				draw_healthbar(meterX - meterWidth/2, yy - meterHeight/2, meterX + meterWidth/2, yy + meterHeight/2, meter, c_black, values[i].minColor, values[i].maxColor, 3, true, true);
+			}
+			
+			draw_set_alpha(1);
 			
 			break;
 		
@@ -871,22 +990,28 @@ drawMenu = function() {
 
 
 // Doodles
-// to show important stuff on the players hud
-// if they're too close to the sun for example
+// shows important stuff on the hud
 
 doodles = [
 	{
-		description: "Careful, you're flying to close to the sun!",
+		description: "Careful, you're flying too close to the sun!",
 		sprite: sDanger,
 		fn: function() {
 			return Spaceship.inSunRadius;
+		}
+	},
+	{
+		description: "Low health!",
+		sprite: sDanger,
+		fn: function() {
+			return (Spaceship.hp < 500);
 		}
 	},
 ];
 
 selectedDoodle = 0;
 doodleButtonSize = 32;
-doodleButtonPadding = 1.25;
+doodleButtonPadding = 1.9;
 
 drawDoodles = function() {
 	
@@ -916,7 +1041,4 @@ drawDoodles = function() {
 	}
 	
 }
-
-
-
 

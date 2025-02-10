@@ -1,4 +1,4 @@
-function set_planet(components, playerPos = new vec2(0, 0)){
+function set_planet(components, playerPos = vec2(0, 0)){
 	
 	// Change rooms
 	room_goto(rmPlanet);
@@ -11,6 +11,8 @@ function set_planet(components, playerPos = new vec2(0, 0)){
 	// Set player position
 	get_player().x = playerPos.x;
 	get_player().y = playerPos.y;
+	
+	audio_stop_all();
 	
 	
 	show_debug_message(json_stringify(PlanetHandler.components, true));

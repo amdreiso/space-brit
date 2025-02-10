@@ -25,3 +25,16 @@ drawDoodles();
 calculateSunProximity();
 
 
+// Hit red tint
+hitAlpha = lerp(hitAlpha, 0, 0.1);
+
+draw_set_alpha(hitAlpha);
+draw_rectangle_color(
+	0, 0, window_get_width(), window_get_height(),
+	c_red, c_red, c_red, c_red, false
+);
+draw_set_alpha(1);
+
+
+// Dead menu
+drawDeadMenu();

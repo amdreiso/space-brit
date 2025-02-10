@@ -18,6 +18,8 @@ enum ITEM {
 	RawIron,
 	Iron,
 	Coal,
+	AutomaticTurret,
+	Count,
 }
 
 enum AUDIO {

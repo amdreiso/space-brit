@@ -19,11 +19,6 @@ globalvar Debug; Debug = false;
 globalvar Seed; Seed = 2358327;
 globalvar Console; Console = false;
 
-//globalvar StarGrid; StarGrid = ds_map_create();
-//globalvar Stars; Stars = {
-//	chunk: 128,
-//}
-
 globalvar ParticleCount; ParticleCount = 0;
 
 
@@ -70,11 +65,11 @@ settings();
 
 // Gameplay
 player = instance_create_layer(10000, 13000, "Spaceship", Spaceship);
-instance_create_layer(10000, 12800, "Spaceship", Enemy);
-instance_create_layer(10000, 12800, "Spaceship", Enemy);
-instance_create_layer(10000, 12800, "Spaceship", Enemy);
-instance_create_layer(10000, 12800, "Spaceship", Enemy);
-instance_create_layer(10000, 12800, "Spaceship", Enemy);
+instance_create_layer(10000, 12800, "Spaceship", eBomber);
+instance_create_layer(10000, 12800, "Spaceship", eBomber);
+instance_create_layer(10000, 12800, "Spaceship", eBomber);
+instance_create_layer(10000, 12800, "Spaceship", eBomber);
+instance_create_layer(10000, 12800, "Spaceship", eBomber);
 instance_create_layer(10000, 13000, "Spaceship", Camera);
 instance_create_layer(0, 0, "Spaceship", MusicHandler);
 instance_create_layer(0, 0, "Spaceship", OuterSpace);
@@ -88,7 +83,7 @@ instance_create_layer(irandom(room_width)/2, irandom(room_height)/2, "Solar_Syst
 
 repeat (50) {
 	var xx, yy;
-	var range = new vec2(2000, 1250);
+	var range = vec2(2000, 1250);
 	
 	xx = player.x + irandom_range(-range.x, range.x);
 	yy = player.y + irandom_range(-range.y, range.y);
